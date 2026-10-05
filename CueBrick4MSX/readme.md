@@ -1,3 +1,4 @@
+
 ![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_front_ko.png)
 ![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_back_ko.png)
 
@@ -216,6 +217,9 @@ PLAYER 1 / GAME OVER가 약 5초 동안 표시된 뒤 타이틀로 돌아갑니�
 - **별은 색을 보고 들어가세요.** 시간이 급하면 파랑(TIME +30)을, 어려운 판이면 빨강(BONUS CLEAR)을 노립니다. 공 멈춤으로 타이밍을 맞출 수 있습니다.
 - **막히면 HELP를 보세요.** 일본판 규칙에서는 시간이 다 됐을 때 그 판의 풀이가 나옵니다.
 - **처음이라면 A PRACTICE부터.** 세 판으로 밀기와 가속·정지를 익힌 뒤 본 게임으로 이어집니다.
+
+[![영상 제목](images/cuebrick_sq.jpg)](https://youtu.be/ZW4tJfzxNSE?si=GYr9xUZckWJeqF_3)
+
 
 ## 문제가 생겼을 때
 
