@@ -1,0 +1,129 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>CUE BRICK for MSX2 (fan port) - flyer</title><style>:root { --sans: "Noto Sans CJK KR"; --pixel: "Galmuri11"; --pixel-big: "Galmuri14"; --acc: #17a868; }
+@font-face { font-family: "Galmuri11"; src: url(fonts/Galmuri11.woff2); }
+@font-face { font-family: "Galmuri11"; font-weight: 700; src: url(fonts/Galmuri11-Bold.woff2); }
+@font-face { font-family: "Galmuri14"; src: url(fonts/Galmuri14.woff2); }
+@font-face { font-family: "Press Start 2P"; src: url(fonts/PressStart2P.woff2); }
+@font-face { font-family: "DotGothic16"; src: url(fonts/DotGothic16-jp.woff2); }
+@font-face { font-family: "DotGothic16L"; src: url(fonts/DotGothic16-latin.woff2); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1240px; height: 1754px; }
+body { font-family: var(--sans), sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+img { image-rendering: pixelated; display: block; }
+.page { width: 1240px; height: 1754px; position: relative; overflow: hidden; }
+.px { font-family: var(--pixel), "DotGothic16L", "Galmuri11", monospace; }
+
+/* ---------- front ---------- */
+.front { background: #0b0f2e; }
+.front::before { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(#ffffff09 1px, transparent 1px) 0 0 / 100% 8px,
+              radial-gradient(900px 700px at 50% 44%, #26308a 0%, #131a55 45%, #0b0f2e 100%); }
+.front > * { position: relative; }
+.top { display: flex; justify-content: space-between; align-items: center; padding: 44px 54px 0; }
+.badges { display: flex; gap: 10px; align-items: center; }
+.bd img { display: none; }
+.bd.lg { padding: 0; border: 0; background: none; font-size: 0; line-height: 0; }
+.bd.lg img { display: block; height: 50px; width: auto; image-rendering: auto; }
+.bd.s { border-color: #ffffff70; color: #fff; }
+.bd { font-family: "Press Start 2P", monospace; font-size: 19px; padding: 12px 14px 9px; border: 3px solid #ffd21f; color: #ffd21f; white-space: nowrap; }
+.bd.a { background: #ffd21f; color: #0b0f2e; }
+.bd.c { background: var(--acc); border-color: var(--acc); color: #fff; }
+.tag { color: #9fb0ff; font-size: 20px; letter-spacing: 2px; }
+.head { padding: 30px 54px 0; font-weight: 900; font-size: 82px; line-height: 1.12; letter-spacing: -1px; }
+.head em { font-style: normal; color: #ffd21f; }
+.sub { padding: 18px 56px 0; font-size: 27px; line-height: 1.5; color: #cdd5ff; font-weight: 500; }
+.grid { position: absolute; left: 30px; top: 418px; width: 1180px; height: 982px; }
+.tile { position: absolute; width: 384px; height: 318px; background: #000;
+  box-shadow: 0 0 0 3px #0b0f2e, 0 14px 30px #000a; }
+.tile img { width: 384px; height: 318px; }
+.tile::after { content: ""; position: absolute; inset: 0; border: 5px solid; border-color: #ffffffb0 #00000070 #00000090 #ffffff80; }
+.hole { position: absolute; width: 384px; height: 318px; background: #070a20; box-shadow: inset 0 10px 30px #000, 0 0 0 3px #0b0f2e;
+  outline: 3px dashed #ffd21f55; outline-offset: -14px; }
+.arrow { position: absolute; color: #ffd21f; font-size: 60px; line-height: 1; text-shadow: 0 4px 0 #000; }
+.titleblock { position: absolute; left: 54px; right: 54px; top: 1424px; display: flex; align-items: flex-end; justify-content: space-between; }
+.title { font-family: "Press Start 2P", monospace; font-size: 92px; line-height: 1; letter-spacing: -2px; color: #fff; text-shadow: 6px 6px 0 var(--acc); white-space: nowrap; }
+.forbox { text-align: right; }
+.for { display: inline-block; background: var(--acc); color: #fff; font-size: 34px; padding: 10px 16px 8px; }
+.reading { font-size: 26px; color: #9fb0ff; letter-spacing: 6px; margin-bottom: 12px; }
+.feat { position: absolute; left: 54px; right: 54px; top: 1548px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid #ffffff40; }
+.feat > div { padding: 14px 12px 0 0; }
+.feat > div + div { padding-left: 16px; border-left: 2px solid #ffffff25; }
+.feat .n { font-family: "Press Start 2P", monospace; font-size: 34px; color: #ffd21f; }
+.feat .n.s { font-size: 28px; }
+.feat .l { font-size: 21px; font-weight: 800; margin-left: 8px; letter-spacing: 1px; }
+.feat .d { font-size: 16.5px; color: #cdd5ff; line-height: 1.4; margin-top: 8px; font-weight: 500; white-space: nowrap; }
+.foot { position: absolute; left: 54px; right: 54px; bottom: 26px; font-size: 14.5px; color: #9aa3d6; display: flex; justify-content: space-between; gap: 30px; font-weight: 500; }
+.foot .c { white-space: nowrap; color: #cdd5ff; }
+
+/* ---------- back ---------- */
+.back { background: #eef0f6; color: #141833; padding: 0 56px; }
+.bhead { margin: 0 -56px; background: #0b0f2e; color: #fff; padding: 30px 56px 22px; display: flex; align-items: flex-end; justify-content: space-between;
+  border-bottom: 8px solid var(--acc); }
+.bhead h1 { font-weight: 900; font-size: 54px; line-height: 1; letter-spacing: -1px; }
+.bhead p { font-size: 21px; color: #cdd5ff; margin-top: 10px; font-weight: 500; }
+.bhead .t { text-align: right; }
+.bhead .t .n { font-family: "Press Start 2P", monospace; font-size: 30px; text-shadow: 3px 3px 0 var(--acc); }
+.bhead .badges { justify-content: flex-end; margin-top: 14px; }
+.bhead .bd { font-size: 14px; padding: 8px 10px 6px; border-width: 2px; }
+.bhead .bd.lg { padding: 0; border: 0; font-size: 0; }
+.bhead .bd.lg img { height: 36px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; }
+.card { background: #fff; border-left: 8px solid #2a36b8; padding: 14px 20px 16px; }
+.card.red { border-left-color: #e8402f; }
+.card h3 { font-size: 23px; font-weight: 900; color: #2a36b8; letter-spacing: 1px; }
+.card.red h3 { color: #e8402f; }
+.card p { font-size: 20px; line-height: 1.5; margin-top: 4px; font-weight: 500; }
+h2 { margin-top: 28px; font-size: 25px; font-weight: 900; color: #fff; background: #2a36b8; padding: 6px 14px 7px; display: flex; align-items: baseline; gap: 16px; }
+h2 small { font-size: 17px; font-weight: 500; color: #dfe4ff; }
+table { border-collapse: collapse; width: 100%; }
+.ctl td, .ctl th { padding: 9px 10px; font-size: 20px; border-bottom: 1px solid #c9cfe6; text-align: left; font-weight: 500; }
+.ctl th { font-size: 15px; color: #5a6290; font-weight: 700; padding-top: 10px; }
+.ctl td:first-child { font-weight: 800; width: 470px; }
+.ctl i { font-style: normal; font-weight: 500; color: #5a6290; font-size: 17px; margin-left: 8px; }
+kbd { display: inline-block; font-family: "Press Start 2P", monospace; font-size: 12px; background: #fff; border: 2px solid #141833; border-bottom-width: 4px;
+  border-radius: 6px; padding: 6px 8px 4px; line-height: 14px; vertical-align: middle; margin-right: 6px; min-width: 34px; text-align: center; }
+kbd.plus { border: 0; background: none; min-width: 0; padding: 6px 0 4px; }
+kbd.ar { font-family: var(--sans), sans-serif; font-size: 13px; font-weight: 900; }
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 22px; margin-top: 16px; }
+.rule { display: flex; gap: 14px; align-items: flex-start; }
+.rule img { width: 176px; height: 148px; flex: none; box-shadow: 0 0 0 3px #141833; }
+.rule h4 { font-size: 22px; font-weight: 900; color: #e8402f; line-height: 1.2; }
+.rule p { font-size: 17.5px; line-height: 1.5; margin-top: 4px; font-weight: 500; }
+.cols { display: grid; grid-template-columns: 1.55fr 1fr; gap: 22px; }
+.modes { margin-top: 16px; display: flex; gap: 16px; }
+.modes img { width: 176px; height: 160px; flex: none; box-shadow: 0 0 0 3px #141833; }
+.modes dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 12px; align-items: start; }
+.modes dt { font-family: "Press Start 2P", monospace; font-size: 13px; background: #141833; color: #fff; padding: 7px 8px 5px; white-space: nowrap; }
+.modes dd { font-size: 17.5px; line-height: 1.5; font-weight: 500; }
+.tips { margin-top: 16px; list-style: none; counter-reset: t; }
+.tips li { counter-increment: t; font-size: 17.5px; line-height: 1.5; padding: 0 0 12px 38px; position: relative; font-weight: 500; }
+.tips li::before { content: counter(t); position: absolute; left: 0; top: 1px; font-family: "Press Start 2P", monospace; font-size: 13px; background: #ffd21f; color: #141833; width: 26px; height: 26px; line-height: 28px; text-align: center; }
+.spec { margin-top: 12px; background: #fff; }
+.spec td { padding: 9px 16px 10px; font-size: 17px; line-height: 1.45; font-weight: 500; border-bottom: 2px solid #eef0f6; vertical-align: top; }
+.spec td:first-child { font-weight: 900; color: #2a36b8; white-space: nowrap; width: 1%; }
+.spec code { font-family: "Liberation Mono", monospace; font-size: 16px; font-weight: 700; }
+.bfoot { position: absolute; left: 56px; right: 56px; bottom: 20px; font-size: 13.5px; color: #5a6290; display: flex; justify-content: space-between; gap: 30px; font-weight: 500; }
+.bfoot .c { white-space: nowrap; color: #141833; }
+.ko { word-break: keep-all; }
+.en .for { font-size: 22px; padding: 12px 14px 9px; }
+.en .rule p, .en .modes dd, .en .tips li { font-size: 16px; line-height: 1.42; }
+.en .spec td { font-size: 16px; padding: 7px 16px 8px; }
+.en .spec code { font-size: 15px; }
+.en .tips li { padding-bottom: 9px; }
+.en h2 { margin-top: 22px; }
+.ko .rule p, .ko .modes dd, .ko .tips li { font-size: 18px; }
+.ko .spec td { font-size: 17.5px; }
+.ja h2 { margin-top: 24px; }
+.ja .spec td { font-size: 16.5px; padding: 8px 16px 9px; }
+.en .card p { font-size: 18px; }
+.en .ctl td, .en .ctl th { font-size: 18px; padding: 7px 10px; }
+.en .ctl i { font-size: 16px; }
+.en .head { font-size: 76px; }
+.ja .head { font-size: 80px; }
+</style></head><body><div class="page front ko">
+<div class="top"><div class="badges"><span class="bd a"><img src="logos/msx2.png" alt="" onload="this.parentNode.classList.add('lg')" onerror="this.remove()">MSX2</span><span class="bd "><img src="logos/megarom.png" alt="" onload="this.parentNode.classList.add('lg')" onerror="this.remove()">MEGA ROM</span><span class="bd c"><img src="logos/msxmusic.png" alt="" onload="this.parentNode.classList.add('lg')" onerror="this.remove()">MSX-MUSIC</span><span class="bd s">512KB</span></div><span class="tag px">팬 이식판 · 2026</span></div>
+<h1 class="head">길을 이어라.<br>공이 닿기 전에.</h1>
+<p class="sub">블록을 밀어 레일을 잇는 1989년의 아케이드 퍼즐,<br>이제 MSX2에서 돌아갑니다.</p>
+<div class="grid"><div class="hole" style="left:796px;top:332px"></div><div class="tile" style="left:0px;top:0px"><img src="img/t1.png"></div><div class="tile" style="left:398px;top:0px"><img src="img/t2.png"></div><div class="tile" style="left:796px;top:0px"><img src="img/t3.png"></div><div class="tile" style="left:0px;top:332px"><img src="img/t4.png"></div><div class="tile" style="left:548px;top:332px;z-index:2"><img src="img/t5.png"></div><div class="tile" style="left:0px;top:664px"><img src="img/t6.png"></div><div class="tile" style="left:398px;top:664px"><img src="img/t7.png"></div><div class="tile" style="left:796px;top:664px"><img src="img/t8.png"></div><div class="arrow px" style="left:1084px;top:462px">▶</div></div>
+<div class="titleblock"><div class="title">CUE BRICK</div><div class="forbox"><div class="reading">큐 브릭</div><div class="for px">MSX2판</div></div></div>
+<div class="feat"><div><span class="n">101</span><span class="l">스테이지</span><div class="d">20개 그룹 × 5면 + FINAL</div></div><div><span class="n">3</span><span class="l">모드</span><div class="d">연습 · 플레이<br>등록(암호로 이어 하기)</div></div><div><span class="n">FM</span><span class="l">사운드</span><div class="d">MSX-MUSIC으로 옮긴 원작 음악<br>+ PSG 효과음</div></div><div><span class="n s">512KB</span><span class="l">ROM</span><div class="d">ASCII8 매퍼</div></div></div>
+<div class="foot"><span>비공식 팬 이식판입니다. 원작 아케이드 게임 CUE BRICK © 1989 KONAMI. 이 MSX2판은 코나미와 관계가 없습니다.</span><span class="c">MSX2 version by TOUGHKIDCST, 2026</span></div></div></body></html>
