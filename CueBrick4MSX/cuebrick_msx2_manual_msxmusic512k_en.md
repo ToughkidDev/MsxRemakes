@@ -180,7 +180,6 @@ Good to know:
 
 - A password belongs to its name. With a different name the same password gives PASSWORD ERROR, and you enter the four password characters again.
 - The cartridge cannot save anything. Without the password written down you cannot continue.
-- Passwords from the MSX-MUSIC 1MB edition and the SCC edition work as they are.
 - After 30 seconds on the register screen the game starts at 1-1 without registering.
 - Press **M** or **N** on the register screen to skip registration and start at 1-1 right away.
 
