@@ -1,3 +1,6 @@
+![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_front_ja.png)
+![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_back_ja.png)
+
 # キューブリック MSX2版 取扱説明書 — MSX-MUSIC
 
 2026-10-05 · ToughkidCST
