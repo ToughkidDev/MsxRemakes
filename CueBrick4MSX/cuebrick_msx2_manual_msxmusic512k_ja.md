@@ -1,4 +1,4 @@
-# キューブリック MSX2版 取扱説明書 — MSX-MUSIC 512KB版
+# キューブリック MSX2版 取扱説明書 — MSX-MUSIC
 
 2026-10-05 · ToughkidCST
 
