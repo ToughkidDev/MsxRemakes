@@ -1,5 +1,5 @@
 
-# 큐브릭 MSX2판 사용설명서 — MSX-MUSIC 512KB판
+# 큐브릭 MSX2판 사용설명서 — MSX-MUSIC
 
 2026-10-05 · ToughkidCST
 
