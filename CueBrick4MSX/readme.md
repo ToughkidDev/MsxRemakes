@@ -1,3 +1,5 @@
+![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_front_ko.png)
+![플라이어 타이틀](Flyers/cuebrick_msx2_flyer_msxmusic512k_back_ko.png)
 
 # 큐브릭 MSX2판 사용설명서 — MSX-MUSIC
 
