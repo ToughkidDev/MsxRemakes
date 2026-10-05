@@ -1,4 +1,4 @@
-# Cue Brick for MSX2 — User Manual (MSX-MUSIC 512KB edition)
+# Cue Brick for MSX2 — User Manual (MSX-MUSIC)
 
 2026-10-05 · ToughkidCST
 
