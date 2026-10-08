@@ -4,133 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CUE BRICK for MSX2 (fan port)</title>
-<meta name="description" content="CUE BRICK for MSX2 — unofficial fan port. 한국어 · English · 日本語">
+<meta name="description" content="CUE BRICK for MSX2 — unofficial fan port.">
 <meta property="og:title" content="CUE BRICK for MSX2 (fan port)">
-<meta property="og:description" content="한국어 · English · 日本語">
 <style>
 @font-face { font-family: "Press Start 2P"; src: url(CueBrick4MSX/WWW/fonts/PressStart2P.woff2) format("woff2"); font-display: swap; }
 :root {
-  --bg: #0b0f2e; --bg-deep: #070a20; --panel: #131a55; --line: #ffffff2e;
-  --ink: #ffffff; --ink-soft: #cdd5ff; --ink-dim: #9aa3d6;
-  --yellow: #ffd21f; --acc: #17a868;
+  --bg: #0b0f2e; --ink: #ffffff; --acc: #17a868;
   --pixel: "Press Start 2P", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans CJK KR",
-          "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", "Malgun Gothic", "Meiryo", sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  min-height: 100vh; color: var(--ink); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased;
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px;
+  color: var(--ink); -webkit-font-smoothing: antialiased;
   background:
     linear-gradient(#ffffff09 1px, transparent 1px) 0 0 / 100% 8px,
     radial-gradient(1100px 760px at 50% 30%, #26308a 0%, #131a55 45%, #0b0f2e 100%) no-repeat,
     var(--bg);
 }
-.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 24px 28px; }
-
-.top { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; }
-.badges { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
-.badges li { font-family: var(--pixel); font-size: 12px; line-height: 1; padding: 9px 10px 7px; border: 2px solid var(--yellow); color: var(--yellow); white-space: nowrap; }
-.badges .a { background: var(--yellow); color: var(--bg); }
-.badges .c { background: var(--acc); border-color: var(--acc); color: #fff; }
-.badges .s { border-color: #ffffff70; color: #fff; }
-.tag { font-family: var(--pixel); font-size: 12px; letter-spacing: 1px; color: #9fb0ff; white-space: nowrap; }
-
-.hero { margin-top: 44px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 24px; }
 h1 { font-family: var(--pixel); font-weight: 400; font-size: clamp(26px, 8.4vw, 84px); line-height: 1; letter-spacing: -1px; white-space: nowrap;
      text-shadow: 0.065em 0.065em 0 var(--acc); }
-.for { font-family: var(--pixel); font-size: clamp(13px, 2.4vw, 20px); line-height: 1; background: var(--acc); color: #fff; padding: 11px 13px 8px; white-space: nowrap; }
-
-.pick { margin-top: 40px; padding-top: 16px; border-top: 2px solid #ffffff40; font-family: var(--pixel); font-size: 12px; letter-spacing: 1px; color: var(--yellow); }
-.langs { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; list-style: none; }
-.lang { display: flex; flex-direction: column; background: var(--bg-deep); box-shadow: 0 0 0 3px var(--bg), 0 14px 30px #000a; position: relative; }
-.lang::after { content: ""; position: absolute; inset: 0; border: 4px solid; border-color: #ffffffb0 #00000070 #00000090 #ffffff80; pointer-events: none; }
-.shot { display: block; width: 100%; height: auto; aspect-ratio: 768 / 636; object-fit: cover; background: #000; flex: none; }
-.body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px 22px; }
-.lang h2 { font-size: 26px; font-weight: 900; line-height: 1.2; letter-spacing: -0.5px; }
-.lang p { margin-top: 8px; font-size: 16px; color: var(--ink-soft); font-weight: 500; flex: 1; }
-.ko { word-break: keep-all; }
-.links { margin-top: 18px; display: grid; gap: 10px; }
-.links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px; font-size: 17px; font-weight: 800; text-decoration: none;
-           border: 2px solid var(--yellow); color: var(--yellow); transition: background-color .12s, color .12s, transform .12s; }
-.links a::after { content: "\25B6"; font-size: 12px; }
-.links a.main { background: var(--yellow); color: var(--bg); }
-.links a:hover { background: #fff; border-color: #fff; color: var(--bg); transform: translateX(2px); }
-.links a:focus-visible, footer a:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-
-footer { margin-top: 44px; padding-top: 16px; border-top: 2px solid var(--line); font-size: 13.5px; color: var(--ink-dim); font-weight: 500; }
-footer p + p { margin-top: 4px; }
-footer .credit { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; color: var(--ink-soft); }
-footer a { color: var(--ink-soft); }
-@media (max-width: 560px) { .wrap { padding: 24px 16px 22px; } .hero { margin-top: 32px; } }
-@media (prefers-reduced-motion: reduce) { .links a { transition: none; } .links a:hover { transform: none; } }
+h1 a { color: inherit; text-decoration: none; }
+h1 a:hover { color: #ffd21f; }
+h1 a:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <div class="top">
-    <ul class="badges" aria-label="Edition">
-      <li class="a">MSX2</li><li>MEGA ROM</li><li class="c">MSX-MUSIC</li><li class="s">512KB</li>
-    </ul>
-    <span class="tag">FAN PORT · 2026</span>
-  </div>
-
-  <header class="hero">
-    <h1>CUE BRICK</h1>
-    <span class="for">for MSX2</span>
-  </header>
-
-  <main>
-    <div class="pick" aria-hidden="true">SELECT LANGUAGE</div>
-    <ul class="langs">
-
-      <li class="lang ko" lang="ko">
-        <img class="shot" src="CueBrick4MSX/WWW/img/t1.png" alt="" width="768" height="636" onerror="this.remove()">
-        <div class="body">
-          <h2>한국어</h2>
-          <p>길을 이어라. 공이 닿기 전에.</p>
-          <div class="links">
-            <a class="main" href="CueBrick4MSX/WWW/front_msxmusic512k_ko.html" hreflang="ko">소개</a>
-            <a href="CueBrick4MSX/WWW/back_msxmusic512k_ko.html" hreflang="ko">플레이 안내</a>
-          </div>
-        </div>
-      </li>
-
-      <li class="lang en" lang="en">
-        <img class="shot" src="CueBrick4MSX/WWW/img/t4.png" alt="" width="768" height="636" onerror="this.remove()">
-        <div class="body">
-          <h2>English</h2>
-          <p>Lay the track. Before the ball arrives.</p>
-          <div class="links">
-            <a class="main" href="CueBrick4MSX/WWW/front_msxmusic512k_en.html" hreflang="en">Overview</a>
-            <a href="CueBrick4MSX/WWW/back_msxmusic512k_en.html" hreflang="en">How to play</a>
-          </div>
-        </div>
-      </li>
-
-      <li class="lang ja" lang="ja">
-        <img class="shot" src="CueBrick4MSX/WWW/img/t7.png" alt="" width="768" height="636" onerror="this.remove()">
-        <div class="body">
-          <h2>日本語</h2>
-          <p>道をつなげ。ボールが着く前に。</p>
-          <div class="links">
-            <a class="main" href="CueBrick4MSX/WWW/front_msxmusic512k_ja.html" hreflang="ja">紹介</a>
-            <a href="CueBrick4MSX/WWW/back_msxmusic512k_ja.html" hreflang="ja">遊びかた</a>
-          </div>
-        </div>
-      </li>
-
-    </ul>
-  </main>
-
-  <footer>
-    <p lang="ko">비공식 팬 이식판입니다. 원작 아케이드 게임 CUE BRICK © 1989 KONAMI. 이 MSX2판은 코나미와 관계가 없습니다.</p>
-    <p lang="en">Unofficial fan port. Original arcade game CUE BRICK © 1989 KONAMI. Not affiliated with or endorsed by Konami.</p>
-    <p lang="ja">非公式のファン移植版です。原作アーケードゲーム CUE BRICK © 1989 KONAMI。このMSX2版はコナミとは関係ありません。</p>
-    <p class="credit"><span>MSX2 version by TOUGHKIDCST, 2026</span><a href="https://github.com/ToughkidDev/MsxRemakes">GitHub</a></p>
-  </footer>
-
-</div>
+  <h1><a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/CueBrick4MSX/WWW">CUE BRICK</a></h1>
 </body>
 </html>
