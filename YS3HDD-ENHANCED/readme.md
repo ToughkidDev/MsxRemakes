@@ -1,56 +1,97 @@
-# YS III - HDD Enhanced
-by ToughkidCST 2026
+# YS III — HDD Enhanced
 
-## MSX-DOS2 DIRECTORY INSTALL
+**by ToughkidCST, 2026** 
 
-1. Copy the complete YS3 directory
-   and PLAY.BAT to your game drive's
-   root directory. Keep subdirectories.
+· MSX-DOS2 directory install
+
+A folder package. No DSK image is needed, and no DOS system files are included.
+
+---
+
+## Quick start
+
+1. Copy the complete **`YS3`** directory and **`PLAY.BAT`** to the **root directory** of your
+   game drive. Keep the subdirectories intact.
 2. Boot MSX-DOS2 and select that drive.
-3. Enter PLAY to start the game.
+3. Type `PLAY`.
 
-Example (game drive B:):
+Example, with the game on drive **B:**
+
+```
 B:
 PLAY
+```
 
 Or run the game directly:
+
+```
 B:
 CD \YS3
 YS3
+```
 
-YS3.COM is the game launcher.
-Run it from inside the YS3 directory.
-PLAY.BAT changes to \YS3 on the current
-drive before running YS3.COM.
+`YS3.COM` is the game launcher — run it from inside the `YS3` directory.
 
-REQUIREMENTS
-MSX2 or newer, 256KB mapper RAM,
-128KB VRAM, writable HDD space.
-Game files: about 37MiB before file
-system allocation. Allow at least
-45MiB free.
-The drive must be accessible from DOS.
+`PLAY.BAT` changes to `\YS3` on the current drive, then runs `YS3.COM`.
 
-FILES
-YS3.COM      Language/game launcher
-YS3HDD.BIN   HDD and sound engine
-VIDEO.BIN    Video helpers
-JP / EN      Japanese / English data
-MUSIC        Makoto / MSX-MUSIC / SCC
-SAVE01..05   Shared DAT, BAK, STA files
+---
 
-1: Japanese   2: English   ESC: exit
+## Requirements
+
+| | |
+|---|---|
+| Machine | MSX2 or newer |
+| Mapper RAM | 256 KB |
+| VRAM | 128 KB |
+| Storage | Writable HDD space, reachable from DOS |
+| Free space | **45 MiB or more** (game files are about 37 MiB before file system allocation) |
+
+---
+
+## What is in the package
+
+| Item | Contents |
+|---|---|
+| `YS3.COM` | Language / game launcher |
+| `YS3HDD.BIN` | HDD and sound engine |
+| `VIDEO.BIN` | Video helpers |
+| `JP` / `EN` | Japanese / English game data |
+| `MUSIC` | Makoto, MSX-MUSIC and SCC music data |
+| `SAVE01`–`SAVE05` | Shared save files (`.DAT`, `.BAK`, `.STA`) |
+
+---
+
+## Starting the game
+
+| Key | Action |
+|---|---|
+| `1` | Japanese |
+| `2` | English |
+| `ESC` | Exit to DOS |
+
 Sound hardware is detected at startup.
-RETURN: new game   SPACE: load game
-F4: save   F1: load   Slots: 1 to 5
 
-On upgrade,
-keep your existing SAVE01..05 DAT, BAK
-and STA files together. Do not overwrite
-existing saves with the blank files.
+| Key | Action |
+|---|---|
+| `RETURN` | New game |
+| `SPACE` | Load game |
 
-This folder package needs no DSK image.
-DOS system files are not included.
+## In game
+
+| Key | Action |
+|---|---|
+| `F4` | Save |
+| `F1` | Load |
+| `1`–`5` | Save slot |
+
+---
+
+## Upgrading from an earlier version
+
+> **Keep your existing saves.**
+> Carry over `SAVE01`–`SAVE05` as complete sets — the `.DAT`, `.BAK` and `.STA` files
+> of each slot belong together. **Do not overwrite existing saves with the blank files
+> included in this package.**
 
 
 # Ys III (MSX2, Falcom 1989) — 원작 대비 개선 정리
