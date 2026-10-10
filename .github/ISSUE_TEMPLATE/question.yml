@@ -1,0 +1,23 @@
+name: "Question / 질문"
+description: "Help with installing or playing. / 설치나 플레이 방법에 대한 질문"
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: dropdown
+    id: game
+    attributes:
+      label: "Game / 게임"
+      options:
+        - CUE BRICK
+        - YS III HDD Enhanced (beta)
+        - Knightmare × Gradius Cartridge Combination Enhanced
+        - Other / 기타
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: "Question / 질문 내용"
+      description: "Include your machine or emulator if it matters. / 필요하면 기종이나 에뮬레이터도 적어 주세요."
+    validations:
+      required: true

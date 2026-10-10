@@ -1,0 +1,57 @@
+name: "Bug report / 버그 제보"
+description: "Something doesn't work in one of the games. / 게임이 제대로 동작하지 않아요."
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing! You can write in English, 한국어 or 日本語.
+        테스트해 주셔서 감사합니다. 한국어, English, 日本語 모두 괜찮습니다.
+  - type: dropdown
+    id: game
+    attributes:
+      label: "Game / 게임"
+      options:
+        - CUE BRICK
+        - YS III HDD Enhanced (beta)
+        - Knightmare × Gradius Cartridge Combination Enhanced
+        - Other / 기타
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "File / version / 파일·버전"
+      description: "ROM or ZIP file name you used. / 사용한 ROM 또는 ZIP 파일 이름"
+      placeholder: "e.g. YS3HDDEnhanced_261010_2.zip"
+    validations:
+      required: true
+  - type: input
+    id: machine
+    attributes:
+      label: "Machine or emulator / 기종·에뮬레이터"
+      description: "Real hardware model, or emulator name and version, plus any extras (sound cartridge, HDD/SD interface, RAM). / 실기 모델 또는 에뮬레이터와 버전, 추가 장치(사운드 카트리지, HDD/SD 인터페이스, 램)"
+      placeholder: "e.g. openMSX 20.0, Panasonic FS-A1GT / Sunrise IDE, MSX-MUSIC"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: "What happened? / 어떤 문제가 있었나요?"
+      description: "What you expected and what happened instead. / 기대한 동작과 실제로 일어난 일"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "How to reproduce / 재현 방법"
+      placeholder: |
+        1. Boot the game
+        2. Go to stage 3
+        3. ...
+  - type: textarea
+    id: media
+    attributes:
+      label: "Screenshots or video / 스크린샷·영상"
+      description: "Drag and drop images here, or paste a video link. / 이미지를 끌어다 놓거나 영상 링크를 붙여 넣어 주세요."
