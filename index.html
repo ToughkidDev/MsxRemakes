@@ -32,6 +32,12 @@ body {
 h1 { font-family: var(--pixel); font-weight: 400; font-size: clamp(22px, 6vw, 56px); line-height: 1; letter-spacing: -1px;
      text-shadow: 0.065em 0.065em 0 var(--acc); }
 .sub { margin-top: 18px; font-family: var(--pixel); font-size: 12px; letter-spacing: 1px; color: var(--yellow); }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 24px; }
+.issues { display: inline-flex; align-items: center; gap: 10px; padding: 11px 14px 9px; font-family: var(--pixel); font-size: 11px; line-height: 1.2;
+          letter-spacing: 1px; color: var(--yellow); text-decoration: none; border: 2px solid var(--yellow); transition: background-color .12s, color .12s; }
+.issues::after { content: "\25B6"; font-size: 9px; }
+.issues:hover { background: var(--yellow); color: var(--bg); }
+.issues:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 
 /* Game list: add a game by copying one <li class="game"> block. */
 .games { margin-top: 40px; padding-top: 24px; border-top: 2px solid #ffffff40;
@@ -58,8 +64,11 @@ footer a { color: var(--ink-soft); }
 <div class="wrap">
 
   <header>
-    <h1>MSX REMAKES</h1>
-    <p class="sub">FAN PORTS FOR MSX</p>
+    <div>
+      <h1>MSX REMAKES</h1>
+      <p class="sub">FAN PORTS FOR MSX</p>
+    </div>
+    <a class="issues" href="https://github.com/ToughkidDev/MsxRemakes/issues/new/choose">BUG REPORT · Q&amp;A</a>
   </header>
 
   <main>
@@ -99,7 +108,7 @@ footer a { color: var(--ink-soft); }
   </main>
 
   <footer>
-    <p>Unofficial fan ports. Not affiliated with or endorsed by the original rights holders. · <a href="https://github.com/ToughkidDev/MsxRemakes">GitHub</a></p>
+    <p>Unofficial fan ports. Not affiliated with or endorsed by the original rights holders. · <a href="https://github.com/ToughkidDev/MsxRemakes">GitHub</a> · <a href="https://github.com/ToughkidDev/MsxRemakes/issues">Issues</a></p>
   </footer>
 
 </div>

@@ -1,0 +1,24 @@
+name: "Suggestion / 제안"
+description: "An idea or improvement for a game or the site. / 게임이나 사이트에 대한 아이디어·개선 제안"
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: game
+    attributes:
+      label: "Game / 게임"
+      options:
+        - CUE BRICK
+        - YS III HDD Enhanced (beta)
+        - Knightmare × Gradius Cartridge Combination Enhanced
+        - Website / 사이트
+        - New game request / 새 게임 요청
+        - Other / 기타
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: "Your idea / 제안 내용"
+    validations:
+      required: true
