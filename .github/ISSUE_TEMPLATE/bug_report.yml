@@ -13,6 +13,7 @@ body:
     attributes:
       label: "Game / 게임"
       options:
+        - MUCOMSX
         - CUE BRICK
         - YS III HDD Enhanced (beta)
         - Knightmare × Gradius Cartridge Combination Enhanced
