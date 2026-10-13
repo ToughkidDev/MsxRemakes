@@ -4,6 +4,7 @@ Newest first. The latest few are also shown on the [MSX REMAKES](https://toughki
 
 | Date | Game | News |
 |---|---|---|
+| 2026-10-13 | KNIGHTMARE | Updated ROM `KnightmareGradiusCartComboEnhanced_261013.rom` released. [Download](KnightMare-Gradius_Cartridge_Combination_Enhanced/Roms) |
 | 2026-10-10 | YS III | Incorrect release files withdrawn; correct `261010_2` release published. [Details](YS3HDD-ENHANCED/roms) |
 | 2026-10-10 | KNIGHTMARE | [Knightmare × Gradius Cartridge Combination Enhanced](KnightMare-Gradius_Cartridge_Combination_Enhanced) released. |
 | 2026-10-09 | YS III | [YS III HDD Enhanced](YS3HDD-ENHANCED) beta released. |
