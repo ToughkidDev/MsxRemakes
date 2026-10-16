@@ -64,19 +64,21 @@ header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content:
   .news li a::after { grid-column: 3; grid-row: 1 / 3; }
 }
 
-/* Game list: add a game by copying one <li class="game"> block. */
-.games { margin-top: 40px; padding-top: 24px; border-top: 2px solid #ffffff40;
+/* Card lists: add a game or app by copying one <li class="game"> block into the right section. */
+.shelf { margin-top: 40px; padding-top: 16px; border-top: 2px solid #ffffff40; }
+.shelf > h2 { font-family: var(--pixel); font-weight: 400; font-size: 12px; letter-spacing: 1px; color: var(--yellow); }
+.games { margin-top: 16px;
          display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; list-style: none; }
 .game a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; background: var(--bg-deep);
           box-shadow: 0 0 0 3px var(--bg), 0 14px 30px #000a; position: relative; transition: transform .12s; }
 .game a::after { content: ""; position: absolute; inset: 0; border: 4px solid; border-color: #ffffffb0 #00000070 #00000090 #ffffff80; pointer-events: none; }
 .game img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: #000; }
 .game .body { padding: 14px 16px 18px; }
-.game h2 { font-family: var(--pixel); font-weight: 400; font-size: 16px; line-height: 1.3; }
+.game h3 { font-family: var(--pixel); font-weight: 400; font-size: 16px; line-height: 1.3; }
 .game p { margin-top: 10px; font-size: 13.5px; color: var(--ink-dim); font-weight: 500; }
 .game a:hover { transform: translateY(-3px); }
 .game a:hover h2 { color: var(--yellow); }
-.game h2 small { font-size: 11px; color: var(--yellow); white-space: nowrap; }
+.game h3 small { font-size: 11px; color: var(--yellow); white-space: nowrap; }
 .game a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
 footer { margin-top: 44px; padding-top: 16px; border-top: 2px solid var(--line); font-size: 13.5px; color: var(--ink-dim); font-weight: 500; }
@@ -121,59 +123,65 @@ footer a { color: var(--ink-soft); }
   </section>
 
   <main>
-    <ul class="games">
+    <section class="shelf" aria-labelledby="games-title">
+      <h2 id="games-title">GAMES</h2>
+      <ul class="games">
+        <li class="game">
+          <a href="CueBrick4MSX/WWW/index.html">
+            <img src="CueBrick4MSX/cover.jpg" alt="CUE BRICK title screen" width="1000" height="1000">
+            <div class="body">
+              <h3>CUE BRICK</h3>
+              <p>MSX2 · MSX-MUSIC · Original © 1989 KONAMI</p>
+            </div>
+          </a>
+        </li>
 
-      <li class="game">
-        <a href="https://toughkiddev.github.io/MUCOMSX/">
-          <img src="MUCOMSX/cover.jpg" alt="MUCOMSX site header" width="1000" height="1000">
-          <div class="body">
-            <h2>MUCOMSX</h2>
-            <p>MUCOM88 for MSX · MAKOTO (YM2608) · Compose, compile and play MML on real hardware</p>
-          </div>
-        </a>
-      </li>
+        <li class="game">
+          <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/YS3HDD-ENHANCED">
+            <img src="YS3HDD-ENHANCED/cover.jpg" alt="Ys III: Wanderers from Ys cover art" width="1000" height="1000">
+            <div class="body">
+              <h3>YS III HDD ENHANCED <small>(beta ver)</small></h3>
+              <p>MSX2 · MSX-DOS2 HDD · Original © 1989 Nihon Falcom</p>
+            </div>
+          </a>
+        </li>
 
-      <li class="game">
-        <a href="CueBrick4MSX/WWW/index.html">
-          <img src="CueBrick4MSX/cover.jpg" alt="CUE BRICK title screen" width="1000" height="1000">
-          <div class="body">
-            <h2>CUE BRICK</h2>
-            <p>MSX2 · MSX-MUSIC · Original © 1989 KONAMI</p>
-          </div>
-        </a>
-      </li>
+        <li class="game">
+          <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/KnightMare-Gradius_Cartridge_Combination_Enhanced">
+            <img src="KnightMare-Gradius_Cartridge_Combination_Enhanced/cover.jpg" alt="Knightmare title screen with Gradius cartridge logo" width="1000" height="1000">
+            <div class="body">
+              <h3>KNIGHTMARE × GRADIUS</h3>
+              <p>MSX · Cartridge Combination Enhanced · Original © 1986 KONAMI</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
 
-      <li class="game">
-        <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/YS3HDD-ENHANCED">
-          <img src="YS3HDD-ENHANCED/cover.jpg" alt="Ys III: Wanderers from Ys cover art" width="1000" height="1000">
-          <div class="body">
-            <h2>YS III HDD ENHANCED <small>(beta ver)</small></h2>
-            <p>MSX2 · MSX-DOS2 HDD · Original © 1989 Nihon Falcom</p>
-          </div>
-        </a>
-      </li>
+    <section class="shelf" aria-labelledby="apps-title">
+      <h2 id="apps-title">APPLICATIONS</h2>
+      <ul class="games">
+        <li class="game">
+          <a href="https://toughkiddev.github.io/MUCOMSX/">
+            <img src="MUCOMSX/cover.jpg" alt="MUCOMSX site header" width="1000" height="1000">
+            <div class="body">
+              <h3>MUCOMSX</h3>
+              <p>MUCOM88 for MSX · MAKOTO (YM2608) · Compose, compile and play MML on real hardware</p>
+            </div>
+          </a>
+        </li>
 
-      <li class="game">
-        <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/KnightMare-Gradius_Cartridge_Combination_Enhanced">
-          <img src="KnightMare-Gradius_Cartridge_Combination_Enhanced/cover.jpg" alt="Knightmare title screen with Gradius cartridge logo" width="1000" height="1000">
-          <div class="body">
-            <h2>KNIGHTMARE × GRADIUS</h2>
-            <p>MSX · Cartridge Combination Enhanced · Original © 1986 KONAMI</p>
-          </div>
-        </a>
-      </li>
-
-      <li class="game">
-        <a href="https://github.com/ToughkidDev/MDPlayer4Mac/tree/MDPlayer4Mac/macos">
-          <img src="MDPlayer4Mac/cover.jpg" alt="MDPlayer4Mac playing a VGM file" width="1000" height="1000">
-          <div class="body">
-            <h2>MDPLAYER4MAC</h2>
-            <p>macOS port of MDPlayer · VGM, MUCOM88 MUB/MUC, PMD and more</p>
-          </div>
-        </a>
-      </li>
-
-    </ul>
+        <li class="game">
+          <a href="https://github.com/ToughkidDev/MDPlayer4Mac/tree/MDPlayer4Mac/macos">
+            <img src="MDPlayer4Mac/cover.jpg" alt="MDPlayer4Mac playing a VGM file" width="1000" height="1000">
+            <div class="body">
+              <h3>MDPLAYER4MAC</h3>
+              <p>macOS port of MDPlayer · VGM, MUCOM88 MUB/MUC, PMD and more</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
   </main>
 
   <footer>
