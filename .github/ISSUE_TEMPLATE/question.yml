@@ -12,6 +12,7 @@ body:
         - CUE BRICK
         - YS III HDD Enhanced (beta)
         - Knightmare × Gradius Cartridge Combination Enhanced
+        - F-1 Spirit Enhanced
         - Other / 기타
     validations:
       required: true
