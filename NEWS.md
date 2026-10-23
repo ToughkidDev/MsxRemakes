@@ -4,6 +4,7 @@ Newest first. The latest few are also shown on the [MSX REMAKES](https://toughki
 
 | Date | Game | News |
 |---|---|---|
+| 2026-10-24 | F-1 SPIRIT | Updated ROM `F1-Spirit_Enhanced_261024.rom` released. Pit stop fixed: the pit crew, the whole car and the pit timer are now shown. The left/right wall-collision difference is original game behaviour made visible by the 1-dot smooth scroll and is unchanged. Reported in [issue #3](https://github.com/ToughkidDev/MsxRemakes/issues/3). [Details](F1SPIRIT-ENHANCED) |
 | 2026-10-23 | F-1 SPIRIT | [F-1 Spirit Enhanced](F1SPIRIT-ENHANCED) released — ROM `F1-Spirit_Enhanced_261023.rom`. |
 | 2026-10-17 | MDPLAYER4MAC | [MDPlayer4Mac v0.2.2](https://github.com/ToughkidDev/MDPlayer4Mac/releases/tag/v0.2.2) released — msPb MUC and MUB now play at the same volume; fixes for loop entry, silent files, OPNA rhythm and multi-drum auto-pan, and support for the latest MUCOMSX defaults (tempo, SCC waveforms, UTF-8 BOM / CP/M EOF in MUC). |
 | 2026-10-15 | MUCOMSX | [MucoMSX v1.0-Stable](https://github.com/ToughkidDev/MUCOMSX/releases/tag/v1.0-stable) released — first stable release. Adds SCC/SCC+ SSG extension, `#PCMInvert`, faster compiling and the MUCVOICE v0.5beta voice editor. [Site](https://toughkiddev.github.io/MUCOMSX/) |
