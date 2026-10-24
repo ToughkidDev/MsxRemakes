@@ -77,7 +77,7 @@ header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content:
 .game h3 { font-family: var(--pixel); font-weight: 400; font-size: 16px; line-height: 1.3; }
 .game p { margin-top: 10px; font-size: 13.5px; color: var(--ink-dim); font-weight: 500; }
 .game a:hover { transform: translateY(-3px); }
-.game a:hover h2 { color: var(--yellow); }
+.game a:hover h3 { color: var(--yellow); }
 .game h3 small { font-size: 11px; color: var(--yellow); white-space: nowrap; }
 .game a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
@@ -85,6 +85,21 @@ footer { margin-top: 44px; padding-top: 16px; border-top: 2px solid var(--line);
 footer a { color: var(--ink-soft); }
 @media (max-width: 560px) { .wrap { padding: 32px 16px 22px; } .games { gap: 18px; } }
 @media (prefers-reduced-motion: reduce) { .game a { transition: none; } .game a:hover { transform: none; } }
+
+/* Touch screens (iPhone, iPad) and narrow windows: one swipeable row per section instead of wrapping. */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  .games { --edge: 24px;
+           grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: clamp(200px, 30vw, 260px); gap: 18px;
+           overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+           margin-inline: calc(-1 * var(--edge)); padding: 8px var(--edge) 28px; scroll-padding-inline: var(--edge);
+           scrollbar-width: thin; scrollbar-color: #ffffff40 transparent; }
+  .games::-webkit-scrollbar { height: 6px; }
+  .games::-webkit-scrollbar-thumb { background: #ffffff40; }
+  .game { scroll-snap-align: start; }
+}
+@media ((hover: none) and (pointer: coarse)) and (max-width: 560px), (max-width: 560px) {
+  .games { --edge: 16px; grid-auto-columns: 72vw; gap: 14px; }
+}
 </style>
 </head>
 <body>
