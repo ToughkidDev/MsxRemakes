@@ -10,6 +10,8 @@ Apply an IPS patch to a ROM, or create an IPS patch from an original and a modif
 - **패치 적용 (Apply patch):** 원본 ROM + IPS 파일 → 패치된 ROM
 - **IPS 만들기 (Create IPS):** 원본 ROM + 수정한 ROM → IPS 파일
 - 파일 크기와 CRC32 표시, IPS 레코드 수 표시
+- 파일 끌어다 놓기: 칸에 하나씩, 또는 여러 파일을 페이지 아무 곳에나 한 번에 (IPS 파일은 자동 인식)
+  Drag and drop: one file per slot, or several files anywhere on the page (IPS files are detected automatically)
 - RLE 레코드와 결과 크기 조정(truncate) 확장 지원, 최대 16MiB
 - 한국어 · English · 日本語
 

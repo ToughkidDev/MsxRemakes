@@ -66,6 +66,14 @@ h1 { margin-top: 14px; font-family: var(--pixel); font-weight: 400; font-size: c
 .go:hover:not(:disabled) { background: #fff; border-color: #fff; }
 .go:disabled { background: none; color: #ffffff55; border-color: #ffffff40; cursor: not-allowed; }
 
+body.dragging .panel:not([hidden]) { outline: 3px dashed var(--yellow); outline-offset: -3px; }
+body.dragging .panel:not([hidden]) .drop { border-color: var(--yellow); }
+.dropbar { margin-top: 12px; font-size: 13.5px; color: var(--ink-dim); }
+body.dragging .dropbar { color: var(--yellow); font-weight: 700; }
+.swap { font: 600 13px var(--sans); padding: 6px 10px; color: var(--ink-soft); background: none; border: 1px solid #ffffff55; cursor: pointer; }
+.swap:hover:not(:disabled) { border-color: var(--yellow); color: var(--yellow); }
+.swap:disabled { opacity: .4; cursor: not-allowed; }
+.swap:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .status { margin-top: 16px; padding: 12px 14px; font-size: 14px; border-left: 4px solid var(--acc); background: #17a86818; }
 .status[hidden] { display: none; }
 .status.err { border-color: var(--err); background: #ff6b6b18; }
@@ -113,13 +121,14 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
     <div class="slots">
       <div>
         <p class="step" data-i18n="stepRom"></p>
-        <label class="drop" tabindex="0" data-slot="rom"><input type="file"><span class="hint" data-i18n="dropRom"></span></label>
+        <label class="drop" tabindex="0" data-slot="rom"><input type="file" multiple><span class="hint" data-i18n="dropRom"></span></label>
       </div>
       <div>
         <p class="step" data-i18n="stepIps"></p>
-        <label class="drop" tabindex="0" data-slot="ips"><input type="file" accept=".ips,.IPS"><span class="hint" data-i18n="dropIps"></span></label>
+        <label class="drop" tabindex="0" data-slot="ips"><input type="file" multiple><span class="hint" data-i18n="dropIps"></span></label>
       </div>
     </div>
+    <p class="dropbar" data-i18n="dropAnyApply"></p>
     <div class="out">
       <label for="apply-name" data-i18n="outName"></label>
       <input id="apply-name" spellcheck="false" autocomplete="off">
@@ -133,13 +142,14 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
     <div class="slots">
       <div>
         <p class="step" data-i18n="stepOrig"></p>
-        <label class="drop" tabindex="0" data-slot="orig"><input type="file"><span class="hint" data-i18n="dropOrig"></span></label>
+        <label class="drop" tabindex="0" data-slot="orig"><input type="file" multiple><span class="hint" data-i18n="dropOrig"></span></label>
       </div>
       <div>
         <p class="step" data-i18n="stepMod"></p>
-        <label class="drop" tabindex="0" data-slot="mod"><input type="file"><span class="hint" data-i18n="dropMod"></span></label>
+        <label class="drop" tabindex="0" data-slot="mod"><input type="file" multiple><span class="hint" data-i18n="dropMod"></span></label>
       </div>
     </div>
+    <p class="dropbar"><span data-i18n="dropAnyCreate"></span> <button class="swap" type="button" id="swap" disabled data-i18n="swap"></button></p>
     <div class="out">
       <label for="create-name" data-i18n="outName"></label>
       <input id="create-name" spellcheck="false" autocomplete="off">
@@ -171,6 +181,9 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
       stepRom: '1. 원본 ROM', stepIps: '2. IPS 패치', stepOrig: '1. 원본 ROM', stepMod: '2. 수정한 ROM',
       dropRom: 'ROM 파일을 끌어다 놓거나 눌러서 선택', dropIps: 'IPS 파일을 끌어다 놓거나 눌러서 선택',
       dropOrig: '원본 ROM을 끌어다 놓거나 눌러서 선택', dropMod: '수정한 ROM을 끌어다 놓거나 눌러서 선택',
+      dropAnyApply: 'ROM과 IPS 파일을 함께 페이지 아무 곳에나 끌어다 놓아도 됩니다. IPS 파일은 자동으로 알아봅니다.',
+      dropAnyCreate: '두 파일을 함께 끌어다 놓으면 먼저 고른 파일이 원본, 다음 파일이 수정본이 됩니다.',
+      swap: '⇄ 원본·수정본 바꾸기',
       outName: '저장할 파일 이름', goApply: '패치 적용 · 저장', goCreate: 'IPS 만들기 · 저장',
       size: '크기', bytes: '바이트', records: '레코드', rle: 'RLE', truncate: '잘라낼 크기',
       patchInfo: '레코드 {r}개 (RLE {l}개)', patchTrunc: ' · 결과 크기를 {t}바이트로 맞춤',
@@ -195,6 +208,9 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
       stepRom: '1. ORIGINAL ROM', stepIps: '2. IPS PATCH', stepOrig: '1. ORIGINAL ROM', stepMod: '2. MODIFIED ROM',
       dropRom: 'Drop a ROM file here or click to choose', dropIps: 'Drop an IPS file here or click to choose',
       dropOrig: 'Drop the original ROM here or click to choose', dropMod: 'Drop the modified ROM here or click to choose',
+      dropAnyApply: 'You can also drop the ROM and the IPS file together anywhere on the page. The IPS file is recognised automatically.',
+      dropAnyCreate: 'Dropping both files at once makes the first one the original and the second one the modified ROM.',
+      swap: '⇄ Swap original / modified',
       outName: 'Save as', goApply: 'APPLY & SAVE', goCreate: 'CREATE & SAVE',
       size: 'Size', bytes: 'bytes', records: 'Records', rle: 'RLE', truncate: 'Truncate to',
       patchInfo: '{r} records ({l} RLE)', patchTrunc: ' · output resized to {t} bytes',
@@ -219,6 +235,9 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
       stepRom: '1. オリジナルROM', stepIps: '2. IPSパッチ', stepOrig: '1. オリジナルROM', stepMod: '2. 改造ROM',
       dropRom: 'ROMファイルをドロップ、またはクリックして選択', dropIps: 'IPSファイルをドロップ、またはクリックして選択',
       dropOrig: 'オリジナルROMをドロップ、またはクリックして選択', dropMod: '改造ROMをドロップ、またはクリックして選択',
+      dropAnyApply: 'ROMとIPSファイルをまとめてページのどこにドロップしても構いません。IPSファイルは自動で判別します。',
+      dropAnyCreate: '2つのファイルをまとめてドロップすると、1つ目がオリジナル、2つ目が改造ROMになります。',
+      swap: '⇄ オリジナル・改造を入れ替え',
       outName: '保存ファイル名', goApply: '適用して保存', goCreate: '作成して保存',
       size: 'サイズ', bytes: 'バイト', records: 'レコード', rle: 'RLE', truncate: '切り詰め',
       patchInfo: 'レコード{r}個（RLE {l}個）', patchTrunc: '・出力サイズを{t}バイトに調整',
@@ -314,47 +333,90 @@ footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line);
     m.textContent = line; m.style.whiteSpace = 'pre-line'; label.appendChild(m);
   }
 
-  function setFile(slot, file) {
-    var reader = new FileReader();
-    reader.onload = function () {
-      var data = new Uint8Array(reader.result), entry = { name: file.name, data: data };
-      var panel = slot === 'rom' || slot === 'ips' ? 'apply' : 'create';
-      hideStatus(panel);
-      if (slot === 'ips') {
-        try { entry.info = IPS.parse(data); }
-        catch (e) { files.ips = null; renderSlot('ips'); update(); showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: num(e.detail || 0) } }); return; }
+  function readFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve({ name: file.name, data: new Uint8Array(reader.result) }); };
+      reader.onerror = function () { reject(IPSError('read_error')); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  function IPSError(code) { var e = new Error(code); e.code = code; return e; }
+  function panelOf(slot) { return slot === 'rom' || slot === 'ips' ? 'apply' : 'create'; }
+  function isIps(entry) {
+    var d = entry.data;
+    return d.length >= 5 && d[0] === 0x50 && d[1] === 0x41 && d[2] === 0x54 && d[3] === 0x43 && d[4] === 0x48;
+  }
+
+  function assign(slot, entry) {
+    var panel = panelOf(slot);
+    hideStatus(panel);
+    if (slot === 'ips') {
+      try { entry.info = IPS.parse(entry.data); }
+      catch (e) { files.ips = null; renderSlot('ips'); update(); showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: num(e.detail || 0) } }); return; }
+    }
+    files[slot] = entry;
+    renderSlot(slot);
+    if (slot === 'rom') {
+      var p = splitName(entry.name);
+      document.getElementById('apply-name').value = p[0] + '_patched' + p[1];
+    }
+    if (slot === 'mod') document.getElementById('create-name').value = splitName(entry.name)[0] + '.ips';
+    update();
+  }
+
+  // Put dropped or chosen files where they belong. A single file dropped on a slot goes to that slot;
+  // anything else is routed: on the apply tab by content (IPS or ROM), on the create tab in order.
+  function route(list, slot) {
+    list = Array.prototype.slice.call(list);
+    if (!list.length) return;
+    var panel = slot ? panelOf(slot) : (document.getElementById('apply').hidden ? 'create' : 'apply');
+    Promise.all(list.map(readFile)).then(function (entries) {
+      if (slot && entries.length === 1) { assign(slot, entries[0]); return; }
+      if (panel === 'apply') {
+        var ips = entries.filter(isIps), roms = entries.filter(function (x) { return !isIps(x); });
+        if (roms.length) assign('rom', roms[0]);
+        if (ips.length) assign('ips', ips[0]);
+        return;
       }
-      files[slot] = entry;
-      renderSlot(slot);
-      if (slot === 'rom') {
-        var p = splitName(file.name);
-        document.getElementById('apply-name').value = p[0] + '_patched' + p[1];
-      }
-      if (slot === 'mod') document.getElementById('create-name').value = splitName(file.name)[0] + '.ips';
-      update();
-    };
-    reader.onerror = function () { showStatus(slot === 'rom' || slot === 'ips' ? 'apply' : 'create', { type: 'err', key: 'read_error' }); };
-    reader.readAsArrayBuffer(file);
+      if (entries.length >= 2) { assign('orig', entries[0]); assign('mod', entries[1]); return; }
+      assign(!files.orig ? 'orig' : 'mod', entries[0]);
+    }, function (e) { showStatus(panel, { type: 'err', key: e.code || 'read_error' }); });
   }
 
   document.querySelectorAll('.drop').forEach(function (label) {
     var slot = label.dataset.slot, input = label.querySelector('input');
-    input.addEventListener('change', function () { if (input.files[0]) setFile(slot, input.files[0]); input.value = ''; });
+    input.addEventListener('change', function () { route(input.files, slot); input.value = ''; });
     label.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
     ['dragenter', 'dragover'].forEach(function (ev) {
       label.addEventListener(ev, function (e) { e.preventDefault(); label.classList.add('over'); });
     });
     ['dragleave', 'drop'].forEach(function (ev) {
-      label.addEventListener(ev, function (e) { e.preventDefault(); label.classList.remove('over'); });
+      label.addEventListener(ev, function () { label.classList.remove('over'); });
     });
-    label.addEventListener('drop', function (e) { var f = e.dataTransfer.files[0]; if (f) setFile(slot, f); });
+    label.addEventListener('drop', function (e) { e.preventDefault(); e.stopPropagation(); endDrag(); route(e.dataTransfer.files, slot); });
   });
-  // Dropping a file elsewhere on the page must not navigate away from it.
-  ['dragover', 'drop'].forEach(function (ev) { window.addEventListener(ev, function (e) { e.preventDefault(); }); });
+
+  // Files can be dropped anywhere on the page; dropping must never navigate away from it.
+  var depth = 0;
+  function hasFiles(e) { return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') !== -1; }
+  function endDrag() { depth = 0; document.body.classList.remove('dragging'); }
+  window.addEventListener('dragenter', function (e) { if (!hasFiles(e)) return; e.preventDefault(); depth++; document.body.classList.add('dragging'); });
+  window.addEventListener('dragleave', function () { if (--depth <= 0) endDrag(); });
+  window.addEventListener('dragover', function (e) { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; });
+  window.addEventListener('drop', function (e) { e.preventDefault(); endDrag(); if (e.dataTransfer) route(e.dataTransfer.files); });
+
+  document.getElementById('swap').addEventListener('click', function () {
+    var o = files.orig; files.orig = files.mod; files.mod = o;
+    renderSlot('orig'); renderSlot('mod');
+    if (files.mod) document.getElementById('create-name').value = splitName(files.mod.name)[0] + '.ips';
+    hideStatus('create'); update();
+  });
 
   function update() {
     document.getElementById('apply-go').disabled = !(files.rom && files.ips);
     document.getElementById('create-go').disabled = !(files.orig && files.mod);
+    document.getElementById('swap').disabled = !(files.orig || files.mod);
   }
 
   function showStatus(panel, st) {
