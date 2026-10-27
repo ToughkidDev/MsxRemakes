@@ -1,10 +1,18 @@
-## Updated  F1-Spirit_Enhanced_261024.rom (2026-10-25)
 
-Issue 보고에 따른 버그 리포트를 수정하였습니다. 
-https://github.com/ToughkidDev/MsxRemakes/issues/3#issuecomment-6386768805
+### Original Rom (GoodMSX)
+
+  - F1_Spirit_1987_Konami_J_a1.rom
+  - Size: 131,072 bytes
+  - CRC32: 64D2DF7C
+
+### IPS FILE
+
+  - F1-Spirit_Enhanced_261027.ips
+  - Size : 125,248 bytes.
+  - CRC32: 907788E8
+
+## IPS patcher here - 
+### https://toughkiddev.github.io/MsxRemakes/IPSPATCHER/ 
+  
 
 
-## Updated  F1-Spirit_Enhanced_261024.rom (2026-10-24)
-
-Issue 보고에 따른 버그 리포트를 수정하였습니다. 
-https://github.com/ToughkidDev/MsxRemakes/issues/3#issue-5986783665
