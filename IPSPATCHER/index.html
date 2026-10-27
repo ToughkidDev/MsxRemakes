@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPS PATCHER</title>
+<meta name="description" content="Apply IPS patches to ROM files, or create an IPS patch from an original and a modified ROM. Runs entirely in your browser.">
+<style>
+@font-face { font-family: "Press Start 2P"; src: url(../CueBrick4MSX/WWW/fonts/PressStart2P.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Galmuri11"; src: url(../CueBrick4MSX/WWW/fonts/Galmuri11.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "DotGothic16"; src: url(../CueBrick4MSX/WWW/fonts/DotGothic16-jp.woff2) format("woff2"); font-display: swap; }
+:root {
+  --bg: #0b0f2e; --bg-deep: #070a20; --panel: #0f1545; --ink: #ffffff; --ink-soft: #cdd5ff; --ink-dim: #9aa3d6; --line: #ffffff2e;
+  --yellow: #ffd21f; --acc: #17a868; --err: #ff6b6b;
+  --pixel: "Press Start 2P", "Galmuri11", "DotGothic16", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Hiragino Sans", "Noto Sans JP", "Malgun Gothic", "Meiryo", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased;
+  background:
+    linear-gradient(#ffffff09 1px, transparent 1px) 0 0 / 100% 8px,
+    radial-gradient(1100px 760px at 50% 30%, #26308a 0%, #131a55 45%, #0b0f2e 100%) no-repeat,
+    var(--bg);
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 28px; }
+a { color: var(--ink-soft); }
+
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+.home { font-family: var(--pixel); font-size: 10px; letter-spacing: 1px; color: var(--ink-dim); text-decoration: none; }
+.home:hover { color: var(--yellow); }
+h1 { margin-top: 14px; font-family: var(--pixel); font-weight: 400; font-size: clamp(22px, 6vw, 44px); line-height: 1; letter-spacing: -1px;
+     text-shadow: 0.065em 0.065em 0 var(--acc); }
+.sub { margin-top: 14px; color: var(--ink-soft); font-size: 15px; }
+.langs { display: flex; gap: 6px; }
+.langs button { font: 600 13px var(--sans); padding: 6px 10px; color: var(--ink-soft); background: none; border: 1px solid #ffffff55; cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: var(--bg); }
+
+.tabs { margin-top: 32px; display: flex; gap: 0; border-bottom: 2px solid #ffffff40; }
+.tabs button { font-family: var(--pixel); font-size: 11px; letter-spacing: 1px; padding: 14px 16px 12px; color: var(--ink-dim); background: none;
+               border: 2px solid transparent; border-bottom: 0; margin-bottom: -2px; cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--yellow); border-color: #ffffff40; background: var(--bg-deep); border-bottom: 2px solid var(--bg-deep); }
+.tabs button:focus-visible, .drop:focus-visible, .go:focus-visible, .langs button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+.panel { background: var(--bg-deep); border: 2px solid #ffffff40; border-top: 0; padding: 22px 20px 24px; }
+.panel[hidden] { display: none; }
+.lead { color: var(--ink-soft); font-size: 14.5px; }
+.slots { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.step { font-family: var(--pixel); font-size: 10px; letter-spacing: 1px; color: var(--yellow); margin-bottom: 8px; }
+.drop { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 132px; padding: 14px 16px;
+        border: 2px dashed #ffffff60; background: #ffffff08; cursor: pointer; transition: background-color .12s, border-color .12s; }
+.drop:hover, .drop.over { border-color: var(--yellow); background: #ffd21f14; }
+.drop.ready { border-style: solid; border-color: var(--acc); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.drop .hint { color: var(--ink-dim); font-size: 14px; }
+.drop .name { font-weight: 700; font-size: 15px; word-break: break-all; }
+.drop .meta { margin-top: 6px; font: 12.5px/1.6 var(--mono); color: var(--ink-soft); }
+
+.out { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.out label { font-size: 14px; color: var(--ink-soft); }
+.out input { flex: 1 1 240px; min-width: 0; font: 14px var(--mono); padding: 10px 12px; color: var(--ink); background: #ffffff10; border: 1px solid #ffffff55; }
+.out input:focus { outline: 2px solid var(--yellow); outline-offset: 0; }
+.go { font-family: var(--pixel); font-size: 11px; letter-spacing: 1px; padding: 14px 16px 12px; color: var(--bg); background: var(--yellow); border: 2px solid var(--yellow); cursor: pointer; }
+.go:hover:not(:disabled) { background: #fff; border-color: #fff; }
+.go:disabled { background: none; color: #ffffff55; border-color: #ffffff40; cursor: not-allowed; }
+
+.status { margin-top: 16px; padding: 12px 14px; font-size: 14px; border-left: 4px solid var(--acc); background: #17a86818; }
+.status[hidden] { display: none; }
+.status.err { border-color: var(--err); background: #ff6b6b18; }
+.status.warn { border-color: var(--yellow); background: #ffd21f14; }
+.status .meta { margin-top: 4px; font: 12.5px/1.6 var(--mono); color: var(--ink-soft); }
+
+.notes { margin-top: 26px; color: var(--ink-dim); font-size: 13.5px; }
+.notes li { margin-left: 18px; }
+.notes li + li { margin-top: 4px; }
+footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line); font-size: 13px; color: var(--ink-dim); }
+
+@media (max-width: 600px) {
+  .wrap { padding: 28px 16px 22px; }
+  .slots { grid-template-columns: 1fr; }
+  .tabs button { flex: 1; padding: 12px 8px 10px; font-size: 10px; }
+  .panel { padding: 18px 14px 20px; }
+  .go { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .drop { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <a class="home" href="../index.html">◀ MSX REMAKES</a>
+      <h1>IPS PATCHER</h1>
+      <p class="sub" data-i18n="sub"></p>
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="ko">한국어</button>
+      <button type="button" data-lang="en">English</button>
+      <button type="button" data-lang="ja">日本語</button>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tab-apply" aria-controls="apply" aria-selected="true" data-i18n="tabApply"></button>
+    <button type="button" role="tab" id="tab-create" aria-controls="create" aria-selected="false" data-i18n="tabCreate"></button>
+  </div>
+
+  <section class="panel" id="apply" role="tabpanel" aria-labelledby="tab-apply">
+    <p class="lead" data-i18n="leadApply"></p>
+    <div class="slots">
+      <div>
+        <p class="step" data-i18n="stepRom"></p>
+        <label class="drop" tabindex="0" data-slot="rom"><input type="file"><span class="hint" data-i18n="dropRom"></span></label>
+      </div>
+      <div>
+        <p class="step" data-i18n="stepIps"></p>
+        <label class="drop" tabindex="0" data-slot="ips"><input type="file" accept=".ips,.IPS"><span class="hint" data-i18n="dropIps"></span></label>
+      </div>
+    </div>
+    <div class="out">
+      <label for="apply-name" data-i18n="outName"></label>
+      <input id="apply-name" spellcheck="false" autocomplete="off">
+      <button class="go" type="button" id="apply-go" disabled data-i18n="goApply"></button>
+    </div>
+    <div class="status" id="apply-status" hidden></div>
+  </section>
+
+  <section class="panel" id="create" role="tabpanel" aria-labelledby="tab-create" hidden>
+    <p class="lead" data-i18n="leadCreate"></p>
+    <div class="slots">
+      <div>
+        <p class="step" data-i18n="stepOrig"></p>
+        <label class="drop" tabindex="0" data-slot="orig"><input type="file"><span class="hint" data-i18n="dropOrig"></span></label>
+      </div>
+      <div>
+        <p class="step" data-i18n="stepMod"></p>
+        <label class="drop" tabindex="0" data-slot="mod"><input type="file"><span class="hint" data-i18n="dropMod"></span></label>
+      </div>
+    </div>
+    <div class="out">
+      <label for="create-name" data-i18n="outName"></label>
+      <input id="create-name" spellcheck="false" autocomplete="off">
+      <button class="go" type="button" id="create-go" disabled data-i18n="goCreate"></button>
+    </div>
+    <div class="status" id="create-status" hidden></div>
+  </section>
+
+  <ul class="notes">
+    <li data-i18n="note1"></li>
+    <li data-i18n="note2"></li>
+    <li data-i18n="note3"></li>
+  </ul>
+
+  <footer>MSX REMAKES · <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/IPSPATCHER">GitHub</a></footer>
+</div>
+
+<script src="ips.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var T = {
+    ko: {
+      sub: 'ROM 파일에 IPS 패치를 적용하거나, 원본과 수정본 ROM을 비교해 IPS 패치를 만듭니다.',
+      tabApply: '패치 적용', tabCreate: 'IPS 만들기',
+      leadApply: '원본 ROM과 IPS 파일을 고르면 패치가 적용된 ROM을 내려받습니다.',
+      leadCreate: '원본 ROM과 수정한 ROM을 고르면 두 파일의 차이를 IPS 파일로 만들어 내려받습니다.',
+      stepRom: '1. 원본 ROM', stepIps: '2. IPS 패치', stepOrig: '1. 원본 ROM', stepMod: '2. 수정한 ROM',
+      dropRom: 'ROM 파일을 끌어다 놓거나 눌러서 선택', dropIps: 'IPS 파일을 끌어다 놓거나 눌러서 선택',
+      dropOrig: '원본 ROM을 끌어다 놓거나 눌러서 선택', dropMod: '수정한 ROM을 끌어다 놓거나 눌러서 선택',
+      outName: '저장할 파일 이름', goApply: '패치 적용 · 저장', goCreate: 'IPS 만들기 · 저장',
+      size: '크기', bytes: '바이트', records: '레코드', rle: 'RLE', truncate: '잘라낼 크기',
+      patchInfo: '레코드 {r}개 (RLE {l}개)', patchTrunc: ' · 결과 크기를 {t}바이트로 맞춤',
+      doneApply: '패치를 적용해 {name} 파일을 저장했습니다.',
+      doneCreate: '{name} 파일을 저장했습니다. 레코드 {r}개 (RLE {l}개), 패치 크기 {s}바이트.',
+      same: '두 파일이 똑같아서 만들 패치가 없습니다.',
+      ips_header: 'IPS 파일이 아닙니다. 파일이 "PATCH"로 시작하지 않습니다.',
+      ips_short: 'IPS 파일이 너무 짧습니다.',
+      ips_no_eof: 'IPS 파일 끝 표시("EOF")가 없습니다. 파일이 잘렸을 수 있습니다.',
+      ips_truncated: 'IPS 파일이 중간에 잘렸습니다 (위치 {d}).',
+      too_large: 'IPS는 16MB(16,777,216바이트)까지만 다룰 수 있습니다.',
+      read_error: '파일을 읽지 못했습니다.',
+      note1: '파일은 서버로 올라가지 않습니다. 모든 처리는 이 브라우저 안에서만 이루어집니다.',
+      note2: '패치는 정확한 원본 ROM에 적용해야 합니다. CRC32 값을 패치 배포처의 값과 비교해 보세요.',
+      note3: 'IPS는 16MB까지의 파일을 지원합니다. 수정본이 원본보다 작으면 결과 크기를 맞추는 확장 정보를 함께 기록합니다.'
+    },
+    en: {
+      sub: 'Apply an IPS patch to a ROM, or create an IPS patch from an original and a modified ROM.',
+      tabApply: 'APPLY PATCH', tabCreate: 'CREATE IPS',
+      leadApply: 'Pick the original ROM and an IPS file to download the patched ROM.',
+      leadCreate: 'Pick the original ROM and your modified ROM to download an IPS file with the differences.',
+      stepRom: '1. ORIGINAL ROM', stepIps: '2. IPS PATCH', stepOrig: '1. ORIGINAL ROM', stepMod: '2. MODIFIED ROM',
+      dropRom: 'Drop a ROM file here or click to choose', dropIps: 'Drop an IPS file here or click to choose',
+      dropOrig: 'Drop the original ROM here or click to choose', dropMod: 'Drop the modified ROM here or click to choose',
+      outName: 'Save as', goApply: 'APPLY & SAVE', goCreate: 'CREATE & SAVE',
+      size: 'Size', bytes: 'bytes', records: 'Records', rle: 'RLE', truncate: 'Truncate to',
+      patchInfo: '{r} records ({l} RLE)', patchTrunc: ' · output resized to {t} bytes',
+      doneApply: 'Patched and saved {name}.',
+      doneCreate: 'Saved {name}: {r} records ({l} RLE), {s} bytes.',
+      same: 'The two files are identical, so there is nothing to patch.',
+      ips_header: 'This is not an IPS file: it does not start with "PATCH".',
+      ips_short: 'This IPS file is too short.',
+      ips_no_eof: 'This IPS file has no "EOF" end marker. It may be cut off.',
+      ips_truncated: 'This IPS file is cut off (at byte {d}).',
+      too_large: 'IPS can only address files up to 16 MiB (16,777,216 bytes).',
+      read_error: 'The file could not be read.',
+      note1: 'Nothing is uploaded. All processing happens inside this browser.',
+      note2: 'Apply a patch to the exact ROM it was made for. Compare the CRC32 with the one given by the patch author.',
+      note3: 'IPS supports files up to 16 MiB. If the modified file is smaller, the patch also records the size to cut the result to.'
+    },
+    ja: {
+      sub: 'ROMファイルにIPSパッチを当てる、またはオリジナルと改造ROMからIPSパッチを作成します。',
+      tabApply: 'パッチ適用', tabCreate: 'IPS作成',
+      leadApply: 'オリジナルROMとIPSファイルを選ぶと、パッチを当てたROMをダウンロードします。',
+      leadCreate: 'オリジナルROMと改造ROMを選ぶと、差分をIPSファイルとしてダウンロードします。',
+      stepRom: '1. オリジナルROM', stepIps: '2. IPSパッチ', stepOrig: '1. オリジナルROM', stepMod: '2. 改造ROM',
+      dropRom: 'ROMファイルをドロップ、またはクリックして選択', dropIps: 'IPSファイルをドロップ、またはクリックして選択',
+      dropOrig: 'オリジナルROMをドロップ、またはクリックして選択', dropMod: '改造ROMをドロップ、またはクリックして選択',
+      outName: '保存ファイル名', goApply: '適用して保存', goCreate: '作成して保存',
+      size: 'サイズ', bytes: 'バイト', records: 'レコード', rle: 'RLE', truncate: '切り詰め',
+      patchInfo: 'レコード{r}個（RLE {l}個）', patchTrunc: '・出力サイズを{t}バイトに調整',
+      doneApply: 'パッチを当てて {name} を保存しました。',
+      doneCreate: '{name} を保存しました。レコード{r}個（RLE {l}個）、パッチサイズ{s}バイト。',
+      same: '2つのファイルが同一なので、作成するパッチがありません。',
+      ips_header: 'IPSファイルではありません（"PATCH"で始まっていません）。',
+      ips_short: 'IPSファイルが短すぎます。',
+      ips_no_eof: 'IPSファイルに終端（"EOF"）がありません。途中で切れている可能性があります。',
+      ips_truncated: 'IPSファイルが途中で切れています（{d}バイト目）。',
+      too_large: 'IPSで扱えるのは16MiB（16,777,216バイト）までです。',
+      read_error: 'ファイルを読み込めませんでした。',
+      note1: 'ファイルはアップロードされません。処理はすべてこのブラウザ内で行われます。',
+      note2: 'パッチは対応するオリジナルROMに当ててください。CRC32を配布元の値と比べてください。',
+      note3: 'IPSは16MiBまでのファイルに対応します。改造ROMの方が小さい場合は、出力サイズの情報も記録します。'
+    }
+  };
+
+  var lang = 'en';
+  try { lang = localStorage.getItem('ipsLang') || ''; } catch (e) {}
+  if (!T[lang]) {
+    var nav = (navigator.language || 'en').slice(0, 2);
+    lang = T[nav] ? nav : 'en';
+  }
+
+  function t(key, vars) {
+    var s = (T[lang] && T[lang][key]) || T.en[key] || key;
+    if (vars) s = s.replace(/\{(\w+)\}/g, function (_, k) { return vars[k] != null ? vars[k] : ''; });
+    return s;
+  }
+  function num(n) { return n.toLocaleString(lang === 'ko' ? 'ko-KR' : lang === 'ja' ? 'ja-JP' : 'en-US'); }
+
+  var files = { rom: null, ips: null, orig: null, mod: null };
+  var lastStatus = { apply: null, create: null };
+
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('.langs button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    Object.keys(files).forEach(renderSlot);
+    Object.keys(lastStatus).forEach(function (k) { if (lastStatus[k]) showStatus(k, lastStatus[k]); });
+  }
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      lang = b.dataset.lang;
+      try { localStorage.setItem('ipsLang', lang); } catch (e) {}
+      applyLang();
+    });
+  });
+
+  // Tabs
+  var tabs = document.querySelectorAll('[role="tab"]');
+  function selectTab(id) {
+    tabs.forEach(function (tab) {
+      var on = tab.getAttribute('aria-controls') === id;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      selectTab(tab.getAttribute('aria-controls'));
+      try { history.replaceState(null, '', '#' + tab.getAttribute('aria-controls')); } catch (e) {}
+    });
+  });
+  if (location.hash === '#create') selectTab('create');
+
+  function splitName(name) {
+    var i = name.lastIndexOf('.');
+    return i > 0 ? [name.slice(0, i), name.slice(i)] : [name, ''];
+  }
+
+  // File slots
+  function renderSlot(slot) {
+    var label = document.querySelector('.drop[data-slot="' + slot + '"]');
+    var f = files[slot], hintKey = { rom: 'dropRom', ips: 'dropIps', orig: 'dropOrig', mod: 'dropMod' }[slot];
+    label.classList.toggle('ready', !!f);
+    var input = label.querySelector('input');
+    label.textContent = '';
+    label.appendChild(input);
+    if (!f) {
+      var h = document.createElement('span'); h.className = 'hint'; h.textContent = t(hintKey); label.appendChild(h);
+      return;
+    }
+    var n = document.createElement('span'); n.className = 'name'; n.textContent = f.name; label.appendChild(n);
+    var m = document.createElement('span'); m.className = 'meta';
+    var line = t('size') + ': ' + num(f.data.length) + ' ' + t('bytes') + '\nCRC32: ' + IPS.crc32(f.data);
+    if (slot === 'ips' && f.info) {
+      line += '\n' + t('patchInfo', { r: num(f.info.records.length), l: num(f.info.records.filter(function (r) { return r.rle; }).length) });
+      if (f.info.truncate !== null) line += t('patchTrunc', { t: num(f.info.truncate) });
+    }
+    m.textContent = line; m.style.whiteSpace = 'pre-line'; label.appendChild(m);
+  }
+
+  function setFile(slot, file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var data = new Uint8Array(reader.result), entry = { name: file.name, data: data };
+      var panel = slot === 'rom' || slot === 'ips' ? 'apply' : 'create';
+      hideStatus(panel);
+      if (slot === 'ips') {
+        try { entry.info = IPS.parse(data); }
+        catch (e) { files.ips = null; renderSlot('ips'); update(); showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: num(e.detail || 0) } }); return; }
+      }
+      files[slot] = entry;
+      renderSlot(slot);
+      if (slot === 'rom') {
+        var p = splitName(file.name);
+        document.getElementById('apply-name').value = p[0] + '_patched' + p[1];
+      }
+      if (slot === 'mod') document.getElementById('create-name').value = splitName(file.name)[0] + '.ips';
+      update();
+    };
+    reader.onerror = function () { showStatus(slot === 'rom' || slot === 'ips' ? 'apply' : 'create', { type: 'err', key: 'read_error' }); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  document.querySelectorAll('.drop').forEach(function (label) {
+    var slot = label.dataset.slot, input = label.querySelector('input');
+    input.addEventListener('change', function () { if (input.files[0]) setFile(slot, input.files[0]); input.value = ''; });
+    label.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      label.addEventListener(ev, function (e) { e.preventDefault(); label.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      label.addEventListener(ev, function (e) { e.preventDefault(); label.classList.remove('over'); });
+    });
+    label.addEventListener('drop', function (e) { var f = e.dataTransfer.files[0]; if (f) setFile(slot, f); });
+  });
+  // Dropping a file elsewhere on the page must not navigate away from it.
+  ['dragover', 'drop'].forEach(function (ev) { window.addEventListener(ev, function (e) { e.preventDefault(); }); });
+
+  function update() {
+    document.getElementById('apply-go').disabled = !(files.rom && files.ips);
+    document.getElementById('create-go').disabled = !(files.orig && files.mod);
+  }
+
+  function showStatus(panel, st) {
+    lastStatus[panel] = st;
+    var box = document.getElementById(panel + '-status');
+    box.className = 'status' + (st.type === 'ok' ? '' : ' ' + st.type);
+    box.textContent = t(st.key, st.vars);
+    if (st.meta) { var m = document.createElement('div'); m.className = 'meta'; m.textContent = st.meta; box.appendChild(m); }
+    box.hidden = false;
+  }
+  function hideStatus(panel) { lastStatus[panel] = null; document.getElementById(panel + '-status').hidden = true; }
+
+  function save(data, name) {
+    var url = URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+  }
+  function outName(id, fallback) { return document.getElementById(id).value.trim() || fallback; }
+
+  document.getElementById('apply-go').addEventListener('click', function () {
+    try {
+      var r = IPS.apply(files.rom.data, files.ips.data);
+      var name = outName('apply-name', 'patched.rom');
+      save(r.data, name);
+      var st = { type: 'ok', key: 'doneApply', vars: { name: name },
+                 meta: t('size') + ': ' + num(r.data.length) + ' ' + t('bytes') + ' · CRC32: ' + IPS.crc32(r.data) };
+      showStatus('apply', st);
+    } catch (e) {
+      showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: num(e.detail || 0) } });
+    }
+  });
+
+  document.getElementById('create-go').addEventListener('click', function () {
+    try {
+      var a = files.orig.data, b = files.mod.data;
+      var p = IPS.create(a, b);
+      if (p.records === 0 && p.truncate === null) { showStatus('create', { type: 'warn', key: 'same' }); return; }
+      // Check the patch before handing it out: applying it to the original must give the modified file.
+      var check = IPS.apply(a, p.data).data;
+      if (check.length !== b.length || check.some(function (v, i) { return v !== b[i]; })) throw new Error('verify');
+      var name = outName('create-name', 'patch.ips');
+      save(p.data, name);
+      showStatus('create', { type: 'ok', key: 'doneCreate', vars: { name: name, r: num(p.records), l: num(p.rle), s: num(p.data.length) },
+                             meta: 'CRC32: ' + IPS.crc32(p.data) });
+    } catch (e) {
+      showStatus('create', { type: 'err', key: e.code || 'read_error', vars: {} });
+    }
+  });
+
+  applyLang();
+  update();
+})();
+</script>
+</body>
+</html>
