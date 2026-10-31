@@ -13,6 +13,11 @@
   - Size : 16,181,847 bytes.
   - CRC32: ECF26119
 
+### Patched Rom File 
+  - ThunderX_n64.z64
+  - Size: 16,498,688 bytes
+  - CRC32: BF172480
+
 ## IPS patcher here - 
 ### https://toughkiddev.github.io/MsxRemakes/IPSPATCHER/ 
   
