@@ -18,6 +18,7 @@ body:
         - YS III HDD Enhanced (beta)
         - Knightmare × Gradius Cartridge Combination Enhanced
         - F-1 Spirit Enhanced
+        - Thunder Cross (N64)
         - Other / 기타
     validations:
       required: true
