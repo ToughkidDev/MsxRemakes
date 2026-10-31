@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BPS PATCHER</title>
+<meta name="description" content="Apply BPS patches to ROM files, or create a BPS patch from an original and a modified ROM. Runs entirely in your browser.">
+<style>
+@font-face { font-family: "Press Start 2P"; src: url(../CueBrick4MSX/WWW/fonts/PressStart2P.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Galmuri11"; src: url(../CueBrick4MSX/WWW/fonts/Galmuri11.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "DotGothic16"; src: url(../CueBrick4MSX/WWW/fonts/DotGothic16-jp.woff2) format("woff2"); font-display: swap; }
+:root {
+  --bg: #0b0f2e; --bg-deep: #070a20; --panel: #0f1545; --ink: #ffffff; --ink-soft: #cdd5ff; --ink-dim: #9aa3d6; --line: #ffffff2e;
+  --yellow: #ffd21f; --acc: #17a868; --err: #ff6b6b;
+  --pixel: "Press Start 2P", "Galmuri11", "DotGothic16", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Hiragino Sans", "Noto Sans JP", "Malgun Gothic", "Meiryo", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased;
+  background:
+    linear-gradient(#ffffff09 1px, transparent 1px) 0 0 / 100% 8px,
+    radial-gradient(1100px 760px at 50% 30%, #26308a 0%, #131a55 45%, #0b0f2e 100%) no-repeat,
+    var(--bg);
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 28px; }
+a { color: var(--ink-soft); }
+
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+.home { font-family: var(--pixel); font-size: 10px; letter-spacing: 1px; color: var(--ink-dim); text-decoration: none; }
+.home:hover { color: var(--yellow); }
+h1 { margin-top: 14px; font-family: var(--pixel); font-weight: 400; font-size: clamp(22px, 6vw, 44px); line-height: 1; letter-spacing: -1px;
+     text-shadow: 0.065em 0.065em 0 var(--acc); }
+.sub { margin-top: 14px; color: var(--ink-soft); font-size: 15px; }
+.langs { display: flex; gap: 6px; }
+.langs button { font: 600 13px var(--sans); padding: 6px 10px; color: var(--ink-soft); background: none; border: 1px solid #ffffff55; cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: var(--bg); }
+
+.tabs { margin-top: 32px; display: flex; gap: 0; border-bottom: 2px solid #ffffff40; }
+.tabs button { font-family: var(--pixel); font-size: 11px; letter-spacing: 1px; padding: 14px 16px 12px; color: var(--ink-dim); background: none;
+               border: 2px solid transparent; border-bottom: 0; margin-bottom: -2px; cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--yellow); border-color: #ffffff40; background: var(--bg-deep); border-bottom: 2px solid var(--bg-deep); }
+.tabs button:focus-visible, .drop:focus-visible, .go:focus-visible, .langs button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+.panel { background: var(--bg-deep); border: 2px solid #ffffff40; border-top: 0; padding: 22px 20px 24px; }
+.panel[hidden] { display: none; }
+.lead { color: var(--ink-soft); font-size: 14.5px; }
+.slots { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.step { font-family: var(--pixel); font-size: 10px; letter-spacing: 1px; color: var(--yellow); margin-bottom: 8px; }
+.drop { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 132px; padding: 14px 16px;
+        border: 2px dashed #ffffff60; background: #ffffff08; cursor: pointer; transition: background-color .12s, border-color .12s; }
+.drop:hover, .drop.over { border-color: var(--yellow); background: #ffd21f14; }
+.drop.ready { border-style: solid; border-color: var(--acc); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.drop .hint { color: var(--ink-dim); font-size: 14px; }
+.drop .name { font-weight: 700; font-size: 15px; word-break: break-all; }
+.drop .meta { margin-top: 6px; font: 12.5px/1.6 var(--mono); color: var(--ink-soft); }
+
+.out { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.out label { font-size: 14px; color: var(--ink-soft); }
+.out input { flex: 1 1 240px; min-width: 0; font: 14px var(--mono); padding: 10px 12px; color: var(--ink); background: #ffffff10; border: 1px solid #ffffff55; }
+.out input:focus { outline: 2px solid var(--yellow); outline-offset: 0; }
+.go { font-family: var(--pixel); font-size: 11px; letter-spacing: 1px; padding: 14px 16px 12px; color: var(--bg); background: var(--yellow); border: 2px solid var(--yellow); cursor: pointer; }
+.go:hover:not(:disabled) { background: #fff; border-color: #fff; }
+.go:disabled { background: none; color: #ffffff55; border-color: #ffffff40; cursor: not-allowed; }
+
+body.dragging .panel:not([hidden]) { outline: 3px dashed var(--yellow); outline-offset: -3px; }
+body.dragging .panel:not([hidden]) .drop { border-color: var(--yellow); }
+.dropbar { margin-top: 12px; font-size: 13.5px; color: var(--ink-dim); }
+body.dragging .dropbar { color: var(--yellow); font-weight: 700; }
+.swap { font: 600 13px var(--sans); padding: 6px 10px; color: var(--ink-soft); background: none; border: 1px solid #ffffff55; cursor: pointer; }
+.swap:hover:not(:disabled) { border-color: var(--yellow); color: var(--yellow); }
+.swap:disabled { opacity: .4; cursor: not-allowed; }
+.swap:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.opt { margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-dim); }
+.opt input { width: 16px; height: 16px; accent-color: var(--yellow); }
+progress { display: block; width: 100%; height: 10px; margin-top: 8px; accent-color: var(--yellow); }
+.status { margin-top: 16px; padding: 12px 14px; font-size: 14px; border-left: 4px solid var(--acc); background: #17a86818; }
+.status[hidden] { display: none; }
+.status.err { border-color: var(--err); background: #ff6b6b18; }
+.status.warn { border-color: var(--yellow); background: #ffd21f14; }
+.status .meta { margin-top: 4px; font: 12.5px/1.6 var(--mono); color: var(--ink-soft); }
+
+.notes { margin-top: 26px; color: var(--ink-dim); font-size: 13.5px; }
+.notes li { margin-left: 18px; }
+.notes li + li { margin-top: 4px; }
+footer { margin-top: 36px; padding-top: 14px; border-top: 2px solid var(--line); font-size: 13px; color: var(--ink-dim); }
+
+@media (max-width: 600px) {
+  .wrap { padding: 28px 16px 22px; }
+  .slots { grid-template-columns: 1fr; }
+  .tabs button { flex: 1; padding: 12px 8px 10px; font-size: 10px; }
+  .panel { padding: 18px 14px 20px; }
+  .go { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .drop { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <a class="home" href="../index.html">◀ MSX REMAKES</a>
+      <h1>BPS PATCHER</h1>
+      <p class="sub" data-i18n="sub"></p>
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="ko">한국어</button>
+      <button type="button" data-lang="en">English</button>
+      <button type="button" data-lang="ja">日本語</button>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tab-apply" aria-controls="apply" aria-selected="true" data-i18n="tabApply"></button>
+    <button type="button" role="tab" id="tab-create" aria-controls="create" aria-selected="false" data-i18n="tabCreate"></button>
+  </div>
+
+  <section class="panel" id="apply" role="tabpanel" aria-labelledby="tab-apply">
+    <p class="lead" data-i18n="leadApply"></p>
+    <div class="slots">
+      <div>
+        <p class="step" data-i18n="stepRom"></p>
+        <label class="drop" tabindex="0" data-slot="rom"><input type="file" multiple><span class="hint" data-i18n="dropRom"></span></label>
+      </div>
+      <div>
+        <p class="step" data-i18n="stepBps"></p>
+        <label class="drop" tabindex="0" data-slot="bps"><input type="file" multiple><span class="hint" data-i18n="dropBps"></span></label>
+      </div>
+    </div>
+    <p class="dropbar" data-i18n="dropAnyApply"></p>
+    <label class="opt"><input type="checkbox" id="ignore-src"> <span data-i18n="ignoreSrc"></span></label>
+    <div class="out">
+      <label for="apply-name" data-i18n="outName"></label>
+      <input id="apply-name" spellcheck="false" autocomplete="off">
+      <button class="go" type="button" id="apply-go" disabled data-i18n="goApply"></button>
+    </div>
+    <div class="status" id="apply-status" hidden></div>
+  </section>
+
+  <section class="panel" id="create" role="tabpanel" aria-labelledby="tab-create" hidden>
+    <p class="lead" data-i18n="leadCreate"></p>
+    <div class="slots">
+      <div>
+        <p class="step" data-i18n="stepOrig"></p>
+        <label class="drop" tabindex="0" data-slot="orig"><input type="file" multiple><span class="hint" data-i18n="dropOrig"></span></label>
+      </div>
+      <div>
+        <p class="step" data-i18n="stepMod"></p>
+        <label class="drop" tabindex="0" data-slot="mod"><input type="file" multiple><span class="hint" data-i18n="dropMod"></span></label>
+      </div>
+    </div>
+    <p class="dropbar"><span data-i18n="dropAnyCreate"></span> <button class="swap" type="button" id="swap" disabled data-i18n="swap"></button></p>
+    <div class="out">
+      <label for="create-name" data-i18n="outName"></label>
+      <input id="create-name" spellcheck="false" autocomplete="off">
+      <button class="go" type="button" id="create-go" disabled data-i18n="goCreate"></button>
+    </div>
+    <div class="status" id="create-status" hidden></div>
+  </section>
+
+  <ul class="notes">
+    <li data-i18n="note1"></li>
+    <li data-i18n="note2"></li>
+    <li data-i18n="note3"></li>
+  </ul>
+
+  <footer>MSX REMAKES · <a href="https://github.com/ToughkidDev/MsxRemakes/tree/main/BPSPATCHER">GitHub</a> · <a href="../IPSPATCHER/index.html">IPS PATCHER</a></footer>
+</div>
+
+<script src="bps.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var T = {
+    ko: {
+      sub: 'ROM 파일에 BPS 패치를 적용하거나, 원본과 수정본 ROM을 비교해 BPS 패치를 만듭니다.',
+      tabApply: '패치 적용', tabCreate: 'BPS 만들기',
+      leadApply: '원본 ROM과 BPS 파일을 고르면 패치가 적용된 ROM을 내려받습니다.',
+      leadCreate: '원본 ROM과 수정한 ROM을 고르면 두 파일의 차이를 BPS 파일로 만들어 내려받습니다.',
+      stepRom: '1. 원본 ROM', stepBps: '2. BPS 패치', stepOrig: '1. 원본 ROM', stepMod: '2. 수정한 ROM',
+      dropRom: 'ROM 파일을 끌어다 놓거나 눌러서 선택', dropBps: 'BPS 파일을 끌어다 놓거나 눌러서 선택',
+      dropOrig: '원본 ROM을 끌어다 놓거나 눌러서 선택', dropMod: '수정한 ROM을 끌어다 놓거나 눌러서 선택',
+      dropAnyApply: 'ROM과 BPS 파일을 함께 페이지 아무 곳에나 끌어다 놓아도 됩니다. BPS 파일은 자동으로 알아봅니다.',
+      dropAnyCreate: '두 파일을 함께 끌어다 놓으면 먼저 고른 파일이 원본, 다음 파일이 수정본이 됩니다.',
+      swap: '⇄ 원본·수정본 바꾸기',
+      ignoreSrc: '원본 확인 건너뛰기 (원본 CRC32가 달라도 적용 시도)',
+      outName: '저장할 파일 이름', goApply: '패치 적용 · 저장', goCreate: 'BPS 만들기 · 저장',
+      size: '크기', bytes: '바이트',
+      needSrc: '필요한 원본: {s}바이트 · CRC32 {c}', makes: '결과: {s}바이트 · CRC32 {c}', meta: '메모: {m}',
+      srcOk: '✓ 패치가 요구하는 원본과 같습니다', srcBad: '✗ 패치가 요구하는 원본과 다릅니다',
+      doneApply: '패치를 적용해 {name} 파일을 저장했습니다. 결과 CRC32도 패치에 적힌 값과 같습니다.',
+      doneCreate: '{name} 파일을 저장했습니다. 패치 크기 {s}바이트.',
+      createStats: '원본 같은 위치 {a} · 원본 다른 위치 {b} · 결과 안 반복 {c} · 새 데이터 {d} (바이트)',
+      working: 'BPS를 만드는 중입니다… {p}%',
+      same: '두 파일이 똑같아서 만들 패치가 없습니다.',
+      bps_header: 'BPS 파일이 아닙니다. 파일이 "BPS1"로 시작하지 않습니다.',
+      bps_short: 'BPS 파일이 너무 짧습니다.',
+      bps_truncated: 'BPS 파일이 중간에 잘렸습니다.',
+      bps_corrupt: 'BPS 파일 내용이 올바르지 않습니다.',
+      bps_patch_crc: 'BPS 파일이 손상되었습니다 (패치 CRC32 기록 / 실제: {d}).',
+      bps_source_size: '원본 ROM 크기가 패치와 맞지 않습니다 (필요 / 현재: {d}바이트).',
+      bps_source_crc: '원본 ROM이 패치와 맞지 않습니다 (CRC32 필요 / 현재: {d}). 다른 버전의 ROM일 수 있습니다.',
+      bps_target_crc: '패치 결과가 예상과 다릅니다 (CRC32 예상 / 결과: {d}). 원본이 다르면 이렇게 됩니다.',
+      read_error: '파일을 읽지 못했습니다.',
+      verify: '만든 패치를 확인하다 문제가 생겼습니다.',
+      note1: '파일은 서버로 올라가지 않습니다. 모든 처리는 이 브라우저 안에서만 이루어집니다.',
+      note2: 'BPS 패치에는 원본과 결과의 CRC32가 들어 있어서, 맞지 않는 원본에 적용하면 바로 알려줍니다.',
+      note3: 'IPS와 달리 크기 제한이 없고, 데이터가 다른 위치로 옮겨지거나 끼워 넣어진 경우도 작게 기록합니다. 큰 파일은 만드는 데 몇 초~수십 초 걸립니다.'
+    },
+    en: {
+      sub: 'Apply a BPS patch to a ROM, or create a BPS patch from an original and a modified ROM.',
+      tabApply: 'APPLY PATCH', tabCreate: 'CREATE BPS',
+      leadApply: 'Pick the original ROM and a BPS file to download the patched ROM.',
+      leadCreate: 'Pick the original ROM and your modified ROM to download a BPS file with the differences.',
+      stepRom: '1. ORIGINAL ROM', stepBps: '2. BPS PATCH', stepOrig: '1. ORIGINAL ROM', stepMod: '2. MODIFIED ROM',
+      dropRom: 'Drop a ROM file here or click to choose', dropBps: 'Drop a BPS file here or click to choose',
+      dropOrig: 'Drop the original ROM here or click to choose', dropMod: 'Drop the modified ROM here or click to choose',
+      dropAnyApply: 'You can also drop the ROM and the BPS file together anywhere on the page. The BPS file is recognised automatically.',
+      dropAnyCreate: 'Dropping both files at once makes the first one the original and the second one the modified ROM.',
+      swap: '⇄ Swap original / modified',
+      ignoreSrc: 'Skip the original check (try to apply even if the CRC32 differs)',
+      outName: 'Save as', goApply: 'APPLY & SAVE', goCreate: 'CREATE & SAVE',
+      size: 'Size', bytes: 'bytes',
+      needSrc: 'Needs original: {s} bytes · CRC32 {c}', makes: 'Result: {s} bytes · CRC32 {c}', meta: 'Note: {m}',
+      srcOk: '✓ This is the original the patch expects', srcBad: '✗ This is not the original the patch expects',
+      doneApply: 'Patched and saved {name}. The result CRC32 matches the one in the patch.',
+      doneCreate: 'Saved {name}: {s} bytes.',
+      createStats: 'same position in original {a} · elsewhere in original {b} · repeated in result {c} · new data {d} (bytes)',
+      working: 'Creating the BPS… {p}%',
+      same: 'The two files are identical, so there is nothing to patch.',
+      bps_header: 'This is not a BPS file: it does not start with "BPS1".',
+      bps_short: 'This BPS file is too short.',
+      bps_truncated: 'This BPS file is cut off.',
+      bps_corrupt: 'This BPS file is not valid.',
+      bps_patch_crc: 'This BPS file is damaged (patch CRC32 recorded / actual: {d}).',
+      bps_source_size: 'The original ROM has the wrong size for this patch (needed / given: {d} bytes).',
+      bps_source_crc: 'The original ROM does not match this patch (CRC32 needed / given: {d}). It may be a different version.',
+      bps_target_crc: 'The result is not what the patch expects (CRC32 expected / got: {d}). This happens with a different original.',
+      read_error: 'The file could not be read.',
+      verify: 'Something went wrong while checking the new patch.',
+      note1: 'Nothing is uploaded. All processing happens inside this browser.',
+      note2: 'A BPS patch records the CRC32 of the original and of the result, so applying it to the wrong original is caught right away.',
+      note3: 'Unlike IPS there is no size limit, and data that moved or was inserted is stored compactly. Large files take a few seconds to tens of seconds to create.'
+    },
+    ja: {
+      sub: 'ROMファイルにBPSパッチを当てる、またはオリジナルと改造ROMからBPSパッチを作成します。',
+      tabApply: 'パッチ適用', tabCreate: 'BPS作成',
+      leadApply: 'オリジナルROMとBPSファイルを選ぶと、パッチを当てたROMをダウンロードします。',
+      leadCreate: 'オリジナルROMと改造ROMを選ぶと、差分をBPSファイルとしてダウンロードします。',
+      stepRom: '1. オリジナルROM', stepBps: '2. BPSパッチ', stepOrig: '1. オリジナルROM', stepMod: '2. 改造ROM',
+      dropRom: 'ROMファイルをドロップ、またはクリックして選択', dropBps: 'BPSファイルをドロップ、またはクリックして選択',
+      dropOrig: 'オリジナルROMをドロップ、またはクリックして選択', dropMod: '改造ROMをドロップ、またはクリックして選択',
+      dropAnyApply: 'ROMとBPSファイルをまとめてページのどこにドロップしても構いません。BPSファイルは自動で判別します。',
+      dropAnyCreate: '2つのファイルをまとめてドロップすると、1つ目がオリジナル、2つ目が改造ROMになります。',
+      swap: '⇄ オリジナル・改造を入れ替え',
+      ignoreSrc: 'オリジナルの確認をしない（CRC32が違っても適用を試す）',
+      outName: '保存ファイル名', goApply: '適用して保存', goCreate: '作成して保存',
+      size: 'サイズ', bytes: 'バイト',
+      needSrc: '必要なオリジナル：{s}バイト・CRC32 {c}', makes: '結果：{s}バイト・CRC32 {c}', meta: 'メモ：{m}',
+      srcOk: '✓ パッチが求めるオリジナルと一致します', srcBad: '✗ パッチが求めるオリジナルと一致しません',
+      doneApply: 'パッチを当てて {name} を保存しました。結果のCRC32もパッチの値と一致しています。',
+      doneCreate: '{name} を保存しました。パッチサイズ{s}バイト。',
+      createStats: 'オリジナル同位置 {a}・オリジナル別位置 {b}・結果内の繰り返し {c}・新規データ {d}（バイト）',
+      working: 'BPSを作成中…{p}%',
+      same: '2つのファイルが同一なので、作成するパッチがありません。',
+      bps_header: 'BPSファイルではありません（"BPS1"で始まっていません）。',
+      bps_short: 'BPSファイルが短すぎます。',
+      bps_truncated: 'BPSファイルが途中で切れています。',
+      bps_corrupt: 'BPSファイルの内容が正しくありません。',
+      bps_patch_crc: 'BPSファイルが壊れています（パッチCRC32 記録／実際：{d}）。',
+      bps_source_size: 'オリジナルROMのサイズがパッチと合いません（必要／現在：{d}バイト）。',
+      bps_source_crc: 'オリジナルROMがパッチと合いません（CRC32 必要／現在：{d}）。別バージョンのROMかもしれません。',
+      bps_target_crc: '結果がパッチの想定と違います（CRC32 想定／結果：{d}）。オリジナルが違うとこうなります。',
+      read_error: 'ファイルを読み込めませんでした。',
+      verify: '作成したパッチの確認中に問題が起きました。',
+      note1: 'ファイルはアップロードされません。処理はすべてこのブラウザ内で行われます。',
+      note2: 'BPSパッチにはオリジナルと結果のCRC32が入っているので、違うオリジナルに当てるとすぐ分かります。',
+      note3: 'IPSと違ってサイズ制限がなく、データの移動や挿入も小さく記録します。大きなファイルは作成に数秒〜数十秒かかります。'
+    }
+  };
+
+  var lang = 'en';
+  try { lang = localStorage.getItem('bpsLang') || ''; } catch (e) {}
+  if (!T[lang]) {
+    var nav = (navigator.language || 'en').slice(0, 2);
+    lang = T[nav] ? nav : 'en';
+  }
+
+  function t(key, vars) {
+    var s = (T[lang] && T[lang][key]) || T.en[key] || key;
+    if (vars) s = s.replace(/\{(\w+)\}/g, function (_, k) { return vars[k] != null ? vars[k] : ''; });
+    return s;
+  }
+  function num(n) { return n.toLocaleString(lang === 'ko' ? 'ko-KR' : lang === 'ja' ? 'ja-JP' : 'en-US'); }
+
+  var files = { rom: null, bps: null, orig: null, mod: null };
+  var lastStatus = { apply: null, create: null };
+  var busy = false;
+
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('.langs button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    Object.keys(files).forEach(renderSlot);
+    Object.keys(lastStatus).forEach(function (k) { if (lastStatus[k]) showStatus(k, lastStatus[k]); });
+  }
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      lang = b.dataset.lang;
+      try { localStorage.setItem('bpsLang', lang); } catch (e) {}
+      applyLang();
+    });
+  });
+
+  // Tabs
+  var tabs = document.querySelectorAll('[role="tab"]');
+  function selectTab(id) {
+    tabs.forEach(function (tab) {
+      var on = tab.getAttribute('aria-controls') === id;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      selectTab(tab.getAttribute('aria-controls'));
+      try { history.replaceState(null, '', '#' + tab.getAttribute('aria-controls')); } catch (e) {}
+    });
+  });
+  if (location.hash === '#create') selectTab('create');
+
+  function splitName(name) {
+    var i = name.lastIndexOf('.');
+    return i > 0 ? [name.slice(0, i), name.slice(i)] : [name, ''];
+  }
+
+  // File slots
+  function renderSlot(slot) {
+    var label = document.querySelector('.drop[data-slot="' + slot + '"]');
+    var f = files[slot], hintKey = { rom: 'dropRom', bps: 'dropBps', orig: 'dropOrig', mod: 'dropMod' }[slot];
+    label.classList.toggle('ready', !!f);
+    var input = label.querySelector('input');
+    label.textContent = '';
+    label.appendChild(input);
+    if (!f) {
+      var h = document.createElement('span'); h.className = 'hint'; h.textContent = t(hintKey); label.appendChild(h);
+      return;
+    }
+    var n = document.createElement('span'); n.className = 'name'; n.textContent = f.name; label.appendChild(n);
+    var m = document.createElement('span'); m.className = 'meta';
+    // A whole BPS file always has the same CRC32 (it ends with its own checksum), so it is not shown for patches.
+    var line = t('size') + ': ' + num(f.data.length) + ' ' + t('bytes') + (slot === 'bps' ? '' : '\nCRC32: ' + f.crc);
+    if (slot === 'bps' && f.info) {
+      line += '\n' + t('needSrc', { s: num(f.info.sourceSize), c: hex(f.info.sourceCrc) });
+      line += '\n' + t('makes', { s: num(f.info.targetSize), c: hex(f.info.targetCrc) });
+      if (f.info.metadata.length) line += '\n' + t('meta', { m: new TextDecoder().decode(f.info.metadata).slice(0, 200) });
+    }
+    if (slot === 'rom' && files.bps && files.bps.info) {
+      line += '\n' + (f.data.length === files.bps.info.sourceSize && f.crc === hex(files.bps.info.sourceCrc) ? t('srcOk') : t('srcBad'));
+    }
+    m.textContent = line; m.style.whiteSpace = 'pre-line'; label.appendChild(m);
+  }
+
+  function readFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { var d = new Uint8Array(reader.result); resolve({ name: file.name, data: d, crc: BPS.crc32(d) }); };
+      reader.onerror = function () { reject(BPSError('read_error')); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  function BPSError(code) { var e = new Error(code); e.code = code; return e; }
+  function panelOf(slot) { return slot === 'rom' || slot === 'bps' ? 'apply' : 'create'; }
+  function hex(v) { return v.toString(16).toUpperCase().padStart(8, '0'); }
+  function isBps(entry) {
+    var d = entry.data;
+    return d.length >= 4 && d[0] === 0x42 && d[1] === 0x50 && d[2] === 0x53 && d[3] === 0x31;
+  }
+
+  function assign(slot, entry) {
+    var panel = panelOf(slot);
+    hideStatus(panel);
+    if (slot === 'bps') {
+      try { entry.info = BPS.parse(entry.data); }
+      catch (e) { files.bps = null; renderSlot('bps'); renderSlot('rom'); update(); showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: e.detail || '' } }); return; }
+    }
+    files[slot] = entry;
+    renderSlot(slot);
+    if (slot === 'bps') renderSlot('rom');
+    if (slot === 'rom') {
+      var p = splitName(entry.name);
+      document.getElementById('apply-name').value = p[0] + '_patched' + p[1];
+    }
+    if (slot === 'mod') document.getElementById('create-name').value = splitName(entry.name)[0] + '.bps';
+    update();
+  }
+
+  // Put dropped or chosen files where they belong. A single file dropped on a slot goes to that slot;
+  // anything else is routed: on the apply tab by content (BPS or ROM), on the create tab in order.
+  function route(list, slot) {
+    list = Array.prototype.slice.call(list);
+    if (!list.length) return;
+    var panel = slot ? panelOf(slot) : (document.getElementById('apply').hidden ? 'create' : 'apply');
+    Promise.all(list.map(readFile)).then(function (entries) {
+      if (slot && entries.length === 1) { assign(slot, entries[0]); return; }
+      if (panel === 'apply') {
+        var bps = entries.filter(isBps), roms = entries.filter(function (x) { return !isBps(x); });
+        if (bps.length) assign('bps', bps[0]);
+        if (roms.length) assign('rom', roms[0]);
+        return;
+      }
+      if (entries.length >= 2) { assign('orig', entries[0]); assign('mod', entries[1]); return; }
+      assign(!files.orig ? 'orig' : 'mod', entries[0]);
+    }, function (e) { showStatus(panel, { type: 'err', key: e.code || 'read_error' }); });
+  }
+
+  document.querySelectorAll('.drop').forEach(function (label) {
+    var slot = label.dataset.slot, input = label.querySelector('input');
+    input.addEventListener('change', function () { route(input.files, slot); input.value = ''; });
+    label.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      label.addEventListener(ev, function (e) { e.preventDefault(); label.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      label.addEventListener(ev, function () { label.classList.remove('over'); });
+    });
+    label.addEventListener('drop', function (e) { e.preventDefault(); e.stopPropagation(); endDrag(); route(e.dataTransfer.files, slot); });
+  });
+
+  // Files can be dropped anywhere on the page; dropping must never navigate away from it.
+  var depth = 0;
+  function hasFiles(e) { return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') !== -1; }
+  function endDrag() { depth = 0; document.body.classList.remove('dragging'); }
+  window.addEventListener('dragenter', function (e) { if (!hasFiles(e)) return; e.preventDefault(); depth++; document.body.classList.add('dragging'); });
+  window.addEventListener('dragleave', function () { if (--depth <= 0) endDrag(); });
+  window.addEventListener('dragover', function (e) { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; });
+  window.addEventListener('drop', function (e) { e.preventDefault(); endDrag(); if (e.dataTransfer) route(e.dataTransfer.files); });
+
+  document.getElementById('swap').addEventListener('click', function () {
+    var o = files.orig; files.orig = files.mod; files.mod = o;
+    renderSlot('orig'); renderSlot('mod');
+    if (files.mod) document.getElementById('create-name').value = splitName(files.mod.name)[0] + '.bps';
+    hideStatus('create'); update();
+  });
+
+  function update() {
+    document.getElementById('apply-go').disabled = busy || !(files.rom && files.bps);
+    document.getElementById('create-go').disabled = busy || !(files.orig && files.mod);
+    document.getElementById('swap').disabled = !(files.orig || files.mod);
+  }
+
+  function showStatus(panel, st) {
+    lastStatus[panel] = st;
+    var box = document.getElementById(panel + '-status');
+    box.className = 'status' + (st.type === 'ok' ? '' : ' ' + st.type);
+    box.textContent = t(st.key, st.vars);
+    if (st.meta) { var m = document.createElement('div'); m.className = 'meta'; m.style.whiteSpace = 'pre-line'; m.textContent = typeof st.meta === 'function' ? st.meta() : st.meta; box.appendChild(m); }
+    if (st.progress != null) { var pr = document.createElement('progress'); pr.max = 100; pr.value = st.progress; box.appendChild(pr); }
+    box.hidden = false;
+  }
+  function hideStatus(panel) { lastStatus[panel] = null; document.getElementById(panel + '-status').hidden = true; }
+
+  function save(data, name) {
+    var url = URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+  }
+  function outName(id, fallback) { return document.getElementById(id).value.trim() || fallback; }
+
+  document.getElementById('apply-go').addEventListener('click', function () {
+    try {
+      var r = BPS.apply(files.rom.data, files.bps.data, { ignoreSource: document.getElementById('ignore-src').checked });
+      var name = outName('apply-name', 'patched.rom');
+      // An archive as the original does not make an archive as the result: pick a ROM extension instead.
+      if (/\.(zip|7z|rar)$/i.test(name)) {
+        var d = r.data, n64 = d.length > 4 && d[0] === 0x80 && d[1] === 0x37 && d[2] === 0x12 && d[3] === 0x40;
+        name = name.replace(/\.(zip|7z|rar)$/i, n64 ? '.z64' : '.bin');
+        document.getElementById('apply-name').value = name;
+      }
+      save(r.data, name);
+      showStatus('apply', { type: 'ok', key: 'doneApply', vars: { name: name },
+                            meta: t('size') + ': ' + num(r.data.length) + ' ' + t('bytes') + ' · CRC32: ' + hex(r.targetCrc) });
+    } catch (e) {
+      showStatus('apply', { type: 'err', key: e.code || 'read_error', vars: { d: e.detail || '' } });
+    }
+  });
+
+  document.getElementById('create-go').addEventListener('click', function () {
+    var a = files.orig.data, b = files.mod.data;
+    if (a.length === b.length && files.orig.crc === files.mod.crc && a.every(function (v, i) { return v === b[i]; })) {
+      showStatus('create', { type: 'warn', key: 'same' }); return;
+    }
+    var job = BPS.createJob(a, b), last = -1;
+    busy = true; update();
+    function finish(err, res) {
+      busy = false; update();
+      if (err) { showStatus('create', { type: 'err', key: err.code || 'verify', vars: { d: err.detail || '' } }); return; }
+      var name = outName('create-name', 'patch.bps'), st = res.stats;
+      save(res.data, name);
+      showStatus('create', { type: 'ok', key: 'doneCreate', vars: { name: name, s: num(res.data.length) },
+        meta: function () { return t('createStats', { a: num(st.sourceRead), b: num(st.sourceCopy), c: num(st.targetCopy), d: num(st.targetRead) }); } });
+    }
+    // Work in slices so the page stays responsive and can show progress.
+    (function tick() {
+      try {
+        var t0 = Date.now(), done = false;
+        while (!done && Date.now() - t0 < 60) done = job.step(1 << 16);
+        if (!done) {
+          var p = Math.floor(job.progress() * 100);
+          if (p !== last) { last = p; showStatus('create', { type: 'warn', key: 'working', vars: { p: p }, progress: p }); }
+          setTimeout(tick, 0); return;
+        }
+        var res = job.result();
+        // Check the patch before handing it out: applying it to the original must give the modified file.
+        var check = BPS.apply(a, res.data).data;
+        if (check.length !== b.length || check.some(function (v, i) { return v !== b[i]; })) throw BPSError('verify');
+        finish(null, res);
+      } catch (e) { finish(e); }
+    })();
+  });
+
+  applyLang();
+  update();
+})();
+</script>
+</body>
+</html>
