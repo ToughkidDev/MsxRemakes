@@ -1,4 +1,3 @@
-![Thunder Cross for Nintendo 64](Thunder_Cross_-_02.png)
 
 영상 참조.
 
