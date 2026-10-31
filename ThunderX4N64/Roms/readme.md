@@ -7,11 +7,10 @@
   - CRC32: 59DA2261
 
 
-### IPS FILE
+### BPS FILE
 
-  - thunderx_n64.ips
-  - Size : 16,181,847 bytes.
-  - CRC32: ECF26119
+  - thunderx_n64.bps
+
 
 ### Patched Rom File 
   - ThunderX_n64.z64
@@ -19,7 +18,7 @@
   - CRC32: BF172480
 
 ## IPS patcher here - 
-### https://toughkiddev.github.io/MsxRemakes/IPSPATCHER/ 
+### https://toughkiddev.github.io/MsxRemakes/BPSPATCHER/
   
 
 
