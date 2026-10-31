@@ -17,7 +17,7 @@
   - Size: 16,498,688 bytes
   - CRC32: BF172480
 
-## IPS patcher here - 
+## BPS patcher here - 
 ### https://toughkiddev.github.io/MsxRemakes/BPSPATCHER/
   
 
