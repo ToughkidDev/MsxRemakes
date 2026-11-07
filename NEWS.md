@@ -4,6 +4,7 @@ Newest first. The latest few are also shown on the [MSX REMAKES](https://toughki
 
 | Date | Game | News |
 |---|---|---|
+| 2026-11-07 | VAMPIRE KILLER | Hotfix: updated IPS `VampireKillerEnhanced_261107.ips` released for the same original ROM (CRC32 5953D084). [Details](VampireKiller-Enhanced/Roms) |
 | 2026-11-06 | VAMPIRE KILLER | [Vampire Killer Enhanced](VampireKiller-Enhanced) released — an enhanced version of Konami's 1986 Akumajo Dracula for MSX, distributed as an IPS patch (`VampireKillerEnhanced_261106.ips`). |
 | 2026-10-31 | THUNDER CROSS | [Thunder Cross for Nintendo 64](ThunderX4N64) released — an N64 port of the 1988 Konami arcade game, distributed as an IPS patch. |
 | 2026-10-24 | F-1 SPIRIT | Updated ROM `F1-Spirit_Enhanced_261024.rom` released. Pit stop fixed: the pit crew, the whole car and the pit timer are now shown. The left/right wall-collision difference is original game behaviour made visible by the 1-dot smooth scroll and is unchanged. Reported in [issue #3](https://github.com/ToughkidDev/MsxRemakes/issues/3). [Details](F1SPIRIT-ENHANCED) |
