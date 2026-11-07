@@ -1,10 +1,22 @@
-# Update - Hotfix 2026-11-07
+# Update - Hotfix 2 2026-11-07
 
 ### Original Rom (GoodMSX)
 
   - Akumajyo Drakyula - Vampire Killer (1986) (Konami) (J).rom
   - Size: 131,072 bytes
   - CRC32: 5953D084
+
+
+### IPS FILE
+
+  - VampireKillerEnhanced_261106_2.ips
+  - Size : 373,774 bytes.
+  - CRC32: 90C35872
+
+
+--------------------------------------
+
+# Update - Hotfix 2026-11-07
 
 
 ### IPS FILE
