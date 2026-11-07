@@ -1,4 +1,4 @@
-# Update - Hotfix 2 2026-11-07
+# Latest Update - Hotfix 2 2026-11-07
 - TURBO-R 에서 VDP 분할 타이밍을 놓치는 버그 수정. 
 
 ### Original Rom (GoodMSX)
