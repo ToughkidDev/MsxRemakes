@@ -10,7 +10,7 @@
 
 ### IPS FILE
 
-  - VampireKillerEnhanced_261106_2.ips
+  - VampireKillerEnhanced_261112.ips
   - Size : 374,806 bytes.
   - CRC32: 144D764E
 
