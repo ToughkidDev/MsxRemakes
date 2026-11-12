@@ -1,4 +1,4 @@
-# Latest Update - 2026-11-07
+# Latest Update - 2026-11-12
 - 지금까지 보고된 다양한 버그들을 수정 개선했습니다.
   
 ### Original Rom (GoodMSX)
