@@ -15,8 +15,15 @@
   - CRC32: 144D764E
 
 
+## IPS patcher here - 
+### https://toughkiddev.github.io/MsxRemakes/IPSPATCHER/ 
+
+
+
 --------------------------------------
-# Update - Hotfix 2 2026-11-07
+#### previous updates
+--------------------------------------
+## Update - Hotfix 2 2026-11-07
 - TURBO-R 에서 VDP 분할 타이밍을 놓치는 버그 수정. 
 
 
@@ -29,7 +36,7 @@
 
 --------------------------------------
 
-# Update - Hotfix 2026-11-07
+## Update - Hotfix 2026-11-07
 
 
 ### IPS FILE
@@ -43,7 +50,7 @@
 
 --------------------------------------
 
-# 1st Release - 2026-11-06
+## 1st Release - 2026-11-06
 
 
 ### IPS FILE
@@ -52,9 +59,6 @@
   - Size : 373,590 bytes.
   - CRC32: 71911118
 
-## IPS patcher here - 
-### https://toughkiddev.github.io/MsxRemakes/IPSPATCHER/ 
-  
 
 
 
