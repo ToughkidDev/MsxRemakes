@@ -1,11 +1,23 @@
-# Latest Update - Hotfix 2 2026-11-07
-- TURBO-R 에서 VDP 분할 타이밍을 놓치는 버그 수정. 
-
+# Latest Update - 2026-11-07
+- 지금까지 보고된 다양한 버그들을 수정 개선했습니다.
+  
 ### Original Rom (GoodMSX)
 
   - Akumajyo Drakyula - Vampire Killer (1986) (Konami) (J).rom
   - Size: 131,072 bytes
   - CRC32: 5953D084
+
+
+### IPS FILE
+
+  - VampireKillerEnhanced_261106_2.ips
+  - Size : 374,806 bytes.
+  - CRC32: 144D764E
+
+
+--------------------------------------
+# Update - Hotfix 2 2026-11-07
+- TURBO-R 에서 VDP 분할 타이밍을 놓치는 버그 수정. 
 
 
 ### IPS FILE
