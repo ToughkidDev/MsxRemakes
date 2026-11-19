@@ -27,7 +27,7 @@ body {
     radial-gradient(1100px 760px at 50% 30%, #26308a 0%, #131a55 45%, #0b0f2e 100%) no-repeat,
     var(--bg);
 }
-.wrap { max-width: 1080px; margin: 0 auto; padding: 48px 24px 28px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 48px 24px 28px; }
 
 h1 { font-family: var(--pixel); font-weight: 400; font-size: clamp(22px, 6vw, 56px); line-height: 1; letter-spacing: -1px;
      text-shadow: 0.065em 0.065em 0 var(--acc); }
@@ -68,7 +68,7 @@ header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content:
 .shelf { margin-top: 40px; padding-top: 16px; border-top: 2px solid #ffffff40; }
 .shelf > h2 { font-family: var(--pixel); font-weight: 400; font-size: 12px; letter-spacing: 1px; color: var(--yellow); }
 .games { margin-top: 16px;
-         display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; list-style: none; }
+         display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; list-style: none; }
 .game a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; background: var(--bg-deep);
           box-shadow: 0 0 0 3px var(--bg), 0 14px 30px #000a; position: relative; transition: transform .12s; }
 .game a::after { content: ""; position: absolute; inset: 0; border: 4px solid; border-color: #ffffffb0 #00000070 #00000090 #ffffff80; pointer-events: none; }
