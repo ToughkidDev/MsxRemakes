@@ -1,0 +1,236 @@
+Space Manbow Enhancement Patch
+------------------------------
+v2.0 (c) 2025 by FRS
+
+This patch applies numerous optimizations and fixes several bugs in the
+memorable Konami game *Space Manbow*.
+
+Enhancements / Optimizations
+----------------------------
+- Added a difficulty selection menu to the title screen: Normal, Hard, and
+  Insane. The latter two correspond to having completed Space Manbow once and
+  seven times, respectively.
+- The patch also enables turbo automatically at boot on any MSX that
+  have the CHGCPU routine on its BIOS. Hold the T key at boot to keep the
+  turbo disabled.
+- Added joyMega support:
+  - START = pause the game or continue at the Game Over screen.
+  - The abort feature is now functional: press A+START on a joyMega.
+    (It already existed in the code, but had no key/button mapped.)
+- Improved ship movement precision.
+- New and improved Dynamic VSync routine.
+- Low-latency keyboard/joystick input: the original game had significant input
+  lag, sometimes exceeding 100 ms. It is now much faster (3× or better).
+- The fire rate is now throttled because:
+  a) Autofire users had an unfair advantage — it was possible to instantly kill
+     many bosses.
+  b) After input latency was reduced, bosses died even faster.
+  c) The Z80A CPU load increased significantly when many bullets were on screen,
+     which caused visible slowdowns.
+  - Note: The number of hits required to defeat some enemies was adjusted
+    accordingly, to keep the same level of difficulty as before.
+- Displays an error message at boot if run on an MSX1.
+- Removed a copy protection from the Sprite Color Table updater
+  that wasted CPU time.
+- Enhanced the colors for some sprites:
+  - The pot-like enemy that follows you in stage 2.
+  - The red top-view ship in stage 2 (also seen in stages 1 and 3).
+  - The red "USS Enterprise"-like ship at the start of stage 2.
+- Hardware sprite collision detection is now used when enough CPU time is
+  available, providing pixel-perfect collisions.
+- Speed optimizations: the game now runs much smoother and with fewer slowdowns
+  even on non-turbo MSX2/2+ machines. Several routines were optimized for
+  performance:
+  - Collision detection routines.
+  - Palette loading routines.
+  - Jukebox routines (music replayer).
+  - Player bullet sound effect routine.
+  - Player bullet processing (distinct from the collision detection routine,
+    which was also optimized).
+  - Enemy processing loop.
+  - Loop that searches for an empty slot to create a new enemy.
+  - Optimized and enhanced the extremely slow boss flashing routine (on hit):
+  the boss colors are now preserved during the flash, instead of turning flat
+  white.
+  - Sluggish "swipe" sound effect routine (e.g., miniboss ships taking off in
+    stage 1).
+  - Sluggish mid-stage palette change routine.
+  - Bullet-to-tile enemy collision routine.
+  - Bomb explosion routine
+
+
+Bug Fixes
+---------
+- TurboFix: Corrected the timing and splitscreen routines, allowing the game
+  to always run at the correct speed and without glitches when the turbo
+  enabled. Running with turbo provides a smoother framerate and eliminates any
+  remaining slowdowns. Many animations - such as those of bosses in stages 3,
+  6, 8, and 9 — become smoother.
+- Improved Boss 7 difficulty since the last version of the patch: it now
+  requires actual strategy.
+- Reworked the fix for V9958 register #25 bit2 being overwriten, which disabled
+  this VDP wait-state generator and caused issues on some turbo Z80 machines.
+  Now also works on MSX2 computers that have the V9958 VDP, such as the Victor
+  HC-95(V).
+- Fixed an issue in the upward movement bitmaps of the player’s Manbow-J ship,
+  where two holes in the graphics let the background be seen through.
+- Fixed PSG I/O to use BIOS routines. Space Manbow now passes the MSX Acid2Test.
+- Fixed mouse incompatibility that blocked the keyboard when a mouse was
+  connected.
+- Improved Game Master 2 compatibility: the slow-motion feature now works.
+- Fixed a race condition in the interrupt handler that could cause frame
+  interrupts to be misinterpreted as line interrupts under certain conditions
+  (e.g., Z80B @ 5.37 MHz).
+- Fixed the “F5 TO CONTINUE” message on the Game Over screen.
+- Corrected screen offset and border masking on the Konami logo screen for the
+  V9958 VDP.
+- Corrected gameplay screen offset for the V9958 VDP.
+- Fixed a glitch when the Konami logo screen was blanked.
+- Fixed the initial vertical scroll position in stage 1 (SCR4 mode), which
+  caused a visual glitch, showing garbage at the game start on turbo machines.
+- Fixed a visual glitch that sometimes occurred when pausing.
+- Fixed the color fade-in glitch on certain bosses.
+- Fixed a bug that caused incorrect pitch in certain “swipe-down” sound
+  effects.
+- Fixed a bug that occasionally caused Boss 1 to use the wrong palette. This
+  was due to a duplicated color-12 entry overwriting color-5.
+- Fixed the IC bit for several sprites, allowing hardware sprite collision
+  detection to work.
+- Fixed the hitbox of the “elevator” enemies in stage 2, which was too short
+  on the right side.
+
+
+Known Issues
+------------
+- There is an intermittent bug in stage 1 where the turrets can become “almost”
+  invulnerable. This occurs because their hitboxes are displaced one tile below
+  their normal position, making it very difficult to hit. The cause is
+  unknown — it rarely occurs and it's hard to reproduce reliably.
+- The new Boss 7 animation routine uses lazy background updates to keep the
+  speed acceptable. As a result, when the frame rate drops due to CPU limits,
+  partial animation frames may be drawn, creating some “compression-like”
+  artifacts. This is normal and expected.
+- The original Game Master 2 won't recognize the game when it's installed on
+  some flash MegaROM emulation cartridges. This is a design flaw on such
+  cartridges, where they hide ROM of the game being run and show their own boot
+  ROM in that slot instead, only finally showing the real game ROM after its
+  own ROM code has booted.
+  This design decision creates incompatibilities with almost all MSX cartridge
+  combinations when a original cartridge is used in the first slot connector,
+  including the Game Master 1 & 2 cartridges.
+
+
+ChangeLog
+---------
+v2.0: Numerous optimizations and bug fixes  
+v1.1: VDP R#25 bit-2 fix, PSG direct I/O fix  
+v1.0: TurboFix, Stage-7 boss fix
+
+===========================================================================
+
+How to Apply the Patch
+----------------------
+
+First, make sure you apply it to the original ROM, which must have the
+following checksum:
+SHA1(SPMANBOW.ROM) = f6199f48ff994fc9a8e33a8581bb3bb16dd301ab
+
+1) Verify the SHA-1 checksum with the following tools:
+- Windows:
+  - MD5 & SHA-1 Checksum Utility 1.1  
+  - HashTab
+- macOS:
+  - DropHash  
+  - HashTab  
+  - (or use the Linux method below)
+- Linux:
+  - Type "openssl dgst -sha1 SPMANBOW.ROM" in a shell (without quotes).
+
+2) Apply the patch using any of the following utilities:
+   - Windows : Floating IPS (flips), Lunar IPS
+   - macOS   : MultiPatch, UIPS
+   - Linux   : Floating IPS (flips)
+   - Emulator: openMSX supports soft-patching IPS; see openMSX documentation.
+   - MSX     : IPS4MSX.COM
+
+
+==============================
+Special Thanks
+------------------------------
+- The openMSX team, for their excellent emulator and debugger.  
+- pvvm (aka Pedro de Medeiros), for his many quality-of-life improvements
+  to openMSX.  
+- Sjoerd Mastijn and Aprisobal, for the SjASMPlus assembler.
+- Sandro Sebastiao Singer, for beta testing
+
+
+==============================
+FAQ
+---
+
+Q: Will the patched game run on non-turbo machines?  
+A: Yes. The patch implements a new timing routine that supports any CPU
+speed, including the standard 3.57 MHz Z80A.
+
+Q: I applied the patch but the resulting ROM doesn’t work! What’s wrong?  
+A: You’re probably using a ROM with an incorrect checksum.
+
+Q: I hate your patch! How dare you touch sacred ground?
+A: I understand that the original version holds a special place for many
+   players. This patch is a fan project created to explore a different
+   experience, but you are absolutely free to enjoy the unmodified game if you
+   prefer. Your feedback is appreciated and we hope you continue to have fun
+   with whichever version you choose.
+
+
+===========================================================================
+	                     License
+                           Terms of Use
+---------------------------------------------------------------------------
+
+This license applies to the fan-made patch, this license text, the release
+notes, and the included helper tools (collectively, the "Patch Archive").
+It does not grant rights to any original game data, trademarks, or
+other third-party content.
+
+1) This patch is free for non-commercial use, and the author retains the
+   copyright. You may run, back up, or distribute the patch only under the
+   conditions described in this license
+
+2) You may distribute the patch files (online or on removable media) only under
+   the following conditions:  
+   2.1) No commercial transaction of any kind is involved.
+   2.2) No registration is required to download it
+   2.3) The whole original set of files is distributed together, unmodified,
+        within the same compressed archive.  
+   2.4) This README.TXT must be included unmodified in the same archive file.
+
+3) If you wish to use this patch for commercial purposes, you *must* contact
+   its author. The contact information can be obtained at:
+   http://frs.badcoffee.info
+
+4) Apply the patches to your own legally obtained copies of the game and play
+  the result for yourself (personal, non-commercial use).
+
+5) You may not:
+- Sell, rent, license for a fee, or otherwise monetize the patches or its
+  associated tools, or any work produced with them (including pre-patched
+  outputs).
+- Distribute pre-patched disks or ROMs, or publish the patched results.
+- Bundle the patches with copyrighted game data
+- Host the patch files behind paywalls, paid links, or ad-link shorteners.
+- Use this Patch or its outputs in any commercial product or service
+  without explicit authorization
+
+6) Attribution and Rights
+All copyrights of the original game and its assets remain with their respective
+owners. This Patch Archive contains only fan-created work and eventual
+supporting tools. No endorsement by the rightsholders is implied.
+
+7) Disclaimer
+THE PATCH CONTENTS ARE PROVIDED "AS IS" WITHOUT WARRANTIES OR SUPPORT OF ANY
+KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+PATCH OR THE USE OR OTHER DEALINGS IN THE PATCH.
+USE AT YOUR OWN RISK.
