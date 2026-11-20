@@ -1,5 +1,5 @@
 
-# Space Manbow Enhanced · MSX2
+# Space Manbow Enhanced · MSX2 for DAEWOO MSX2
 
 1989년 코나미의 일본판 《Space Manbow》에 **FRS Enhancement v2.0**과 **대우 MSX2 호환 패치**를 함께 적용한 버전입니다. 
 FRS 패치는 조작 반응과 화면 갱신을 개선하고 타이틀에서 난이도를 고를 수 있게 합니다. 
