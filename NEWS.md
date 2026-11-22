@@ -4,6 +4,7 @@ Newest first. The latest few are also shown on the [MSX REMAKES](https://toughki
 
 | Date | Game | News |
 |---|---|---|
+| 2026-11-15 | MUCOMSX | [MucoMSX v1.5-Stable](https://github.com/ToughkidDev/MUCOMSX/releases/tag/v1.5-Stable) released — runs on MSX-DOS 2 as well as Nextor and starts from file managers such as MM; MUBPLAY, MUCPLAY and MUC2MUB also run on MSX1; One Chip MSX support; MUCVOICE replaced by the browser editor [MUCPlayground](https://toughkiddev.github.io/MUCOMSX/MUCPlayground/); many compiler and player fixes. [Site](https://toughkiddev.github.io/MUCOMSX/) |
 | 2026-11-12 | VAMPIRE KILLER | Update: `VampireKillerEnhanced_261112.ips` fixes various bugs reported so far. Same original ROM (CRC32 5953D084). [Details](VampireKiller-Enhanced/Roms) |
 | 2026-11-07 | VAMPIRE KILLER | Hotfix 2: `VampireKillerEnhanced_261106_2.ips` fixes missed VDP split timing on MSX turbo R. [Details](VampireKiller-Enhanced/Roms) |
 | 2026-11-07 | VAMPIRE KILLER | Hotfix: updated IPS `VampireKillerEnhanced_261107.ips` released for the same original ROM (CRC32 5953D084). [Details](VampireKiller-Enhanced/Roms) |
